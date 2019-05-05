@@ -1,0 +1,31 @@
+version: '{build}'
+
+os: Windows Server 2016
+image: Visual Studio 2017
+
+platform:
+  - x64
+  - x86
+
+environment:
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk11
+    - JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
+
+install:
+  - choco install sbt
+  - cmd: SET PATH=%PATH%;%JAVA_HOME%\bin
+  - cmd: SET PATH=%PATH%;"C:\Program Files (x86)\sbt\bin"
+
+build_script:
+  - sbt ";+compile;+test:compile;+it:compile"
+
+test_script:
+  - sbt ";+test;+it:test"
+
+cache:
+  - '%USERPROFILE%\.ivy2 -> **\dependencies.sbt, project\*'
+  - '%USERPROFILE%\.m2 -> **\dependencies.sbt, project\*'
+  - '%USERPROFILE%\.sbt -> **\dependencies.sbt, project\*'
+  - C:\ProgramData\chocolatey\bin -> appveyor.yml
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml

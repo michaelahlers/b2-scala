@@ -1,0 +1,86 @@
+version: 2.1
+
+use_build: &use_build
+  docker:
+    - image: circleci/openjdk:8-jdk
+
+# See https://discuss.circleci.com/t/wildcard-pattern-cache-directories/5159/4 for details.
+cache_key: &cache_key
+             v1-{{ arch }}-{{ checksum "commits" }}
+             v1-
+
+use_restore_cache: &use_restore_cache
+  restore_cache:
+    keys:
+      - *cache_key
+
+use_save_cache: &use_save_cache
+  save_cache:
+    key: *cache_key
+    paths:
+      - ~/.coursier
+      - ~/.ivy2
+      - ~/.m2
+      - ~/.sbt
+
+workspace_path: &workspace_path
+                  /home/circleci
+
+use_workspace: &use_workspace
+  attach_workspace:
+    at: *workspace_path
+
+jobs:
+
+  build:
+    <<: *use_build
+    steps:
+      - checkout
+      - run: git ls-files dependencies.sbt **/dependencies.sbt project/* | xargs git ls-tree HEAD > commits
+      - *use_restore_cache
+      - run: sbt ';+compile;+test:compile;+it:compile'
+      - *use_save_cache
+      - persist_to_workspace:
+          root: *workspace_path
+          paths:
+            - project
+
+  test:
+    <<: *use_build
+    steps:
+      - *use_workspace
+      - *use_restore_cache
+      - run: sbt '+test'
+
+  integration-test:
+    <<: *use_build
+    steps:
+      - *use_workspace
+      - *use_restore_cache
+      - run: sbt '+it:test'
+
+  publish:
+    <<: *use_build
+    steps:
+      - *use_workspace
+      - *use_restore_cache
+      - run: sbt '+publish'
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - integration-test:
+          requires:
+            - build
+      #- publish:
+      #    requires:
+      #      - build
+      #    filters:
+      #      branches:
+      #        only: /^v\d+.\d+.x
+
