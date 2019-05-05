@@ -1,14 +1,14 @@
 name := "b2-scala"
 description := "Scala libraries for Backblaze B2."
 
-ThisBuild / organization := "ahlers"
-ThisBuild / organizationName := "Ahlers Consulting"
+ThisBuild / organization := "ahlers.b2"
+ThisBuild / organizationName := "Michael Ahlers"
 
-ThisBuild / homepage := Some(new URL("http://b2-scala.github.io"))
+// ThisBuild / homepage := Some(new URL("http://b2-scala.github.io"))
 ThisBuild / startYear := Some(2019)
 
 ThisBuild / developers :=
-    Developer("michaelahlers", "Michael Ahlers", "michael@ahlers.consulting", url("http://github.com/michaelahlers")) ::
+  Developer("michaelahlers", "Michael Ahlers", "michael@ahlers.consulting", url("http://github.com/michaelahlers")) ::
     Nil
 
 ThisBuild / scmInfo :=
