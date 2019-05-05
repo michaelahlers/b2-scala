@@ -1,0 +1,2 @@
+configs(IntegrationTest)
+Defaults.itSettings

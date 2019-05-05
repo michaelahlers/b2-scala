@@ -4,7 +4,4 @@ lazy val root =
 
 lazy val core = project in (file("modules") / "core")
 
-configs(IntegrationTest)
-Defaults.itSettings
-
 publish / skip := true
