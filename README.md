@@ -1,4 +1,4 @@
-# B2: Scala [![CircleCI][circle-ci-status-label]][circle-ci-job] [![Appveyor][appveyor-status-label]][appveyor-build]
+# B2: Scala [![CircleCI][circle-ci-status-label]][circle-ci-job] [![Appveyor][appveyor-status-label]][appveyor-build] [![Codacy][codacy-status-label]][codacy-status]
 
 Scala libraries for Backblaze B2.
 
@@ -7,3 +7,6 @@ Scala libraries for Backblaze B2.
 
 [circle-ci-job]: https://circleci.com/gh/gig-foundation/b2-scala/tree/v0.0.x
 [circle-ci-status-label]: https://circleci.com/gh/gig-foundation/b2-scala/tree/v0.0.x.svg?style=svg
+
+[codacy-status-label]: https://api.codacy.com/project/badge/Grade/baeeff0647e544399e7245e6f4110607
+[codacy-status]: https://codacy.com/app/michaelahlers/b2-scala
