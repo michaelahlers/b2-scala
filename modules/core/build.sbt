@@ -1,2 +1,4 @@
-configs(IntegrationTest)
-Defaults.itSettings
+name := "b2-core"
+
+//configs(IntegrationTest)
+//Defaults.itSettings

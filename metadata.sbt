@@ -1,4 +1,4 @@
-name := "b2-scala"
+name := "b2"
 description := "Scala libraries for Backblaze B2."
 
 ThisBuild / organization := "ahlers.b2"

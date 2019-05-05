@@ -1,7 +1,8 @@
-lazy val root =
-  project
-    .aggregate(core)
+lazy val b2 = (project in file("."))
+  .configs(IntegrationTest)
+  .aggregate(core)
 
-lazy val core = project in (file("modules") / "core")
+lazy val core = (project in file("modules") / "core")
+  .configs(IntegrationTest)
 
 publish / skip := true
