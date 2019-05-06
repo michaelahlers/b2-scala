@@ -40,17 +40,10 @@ object Credential {
 
     case class Chain(providers: NonEmptyList[Provider]) extends Provider {
 
-      /** Returns the first [[Credential]] from all given  */
-      override def get() = {
-        import util.control.Breaks._
-        var c = Option.empty[Credential]
-        breakable {
-          for (p <- providers.toList) {
-            c = p.get()
-            if (c.isDefined) break
-          }
-        }
-        c
+      /** Returns the first [[Credential]] from the chained [[Provider providers]]. */
+      override def get() = providers.foldLeft(Option.empty[Credential]) {
+        case (None, p) => p.get()
+        case (c, _)    => c
       }
 
     }
