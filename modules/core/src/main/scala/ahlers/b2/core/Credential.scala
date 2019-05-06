@@ -1,6 +1,7 @@
 package ahlers.b2.core
 
 import cats.data._
+import cats.syntax.foldable._
 import cats.syntax.option._
 
 /**
@@ -41,10 +42,7 @@ object Credential {
     case class Chain(providers: NonEmptyList[Provider]) extends Provider {
 
       /** Returns the first [[Credential]] from the chained [[Provider providers]]. */
-      override def get() = providers.foldLeft(Option.empty[Credential]) {
-        case (None, p) => p.get()
-        case (c, _)    => c
-      }
+      override def get() = providers.collectFirstSome(_.get())
 
     }
 
