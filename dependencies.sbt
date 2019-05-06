@@ -14,6 +14,7 @@ ThisBuild / libraryDependencies ++=
   "org.typelevel" %% "cats-laws" % "1.6.0" % Test ::
     "org.typelevel" %% "cats-testkit" % "1.6.0" % Test ::
     "org.scalacheck" %% "scalacheck" % "1.14.0" % Test ::
+    "org.scalamock" %% "scalamock" % "4.2.0" % Test ::
     "org.scalatest" %% "scalatest" % "3.0.7" % Test ::
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.2" % Test ::
     Nil
