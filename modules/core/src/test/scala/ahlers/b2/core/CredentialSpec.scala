@@ -48,9 +48,11 @@ class CredentialSpec extends FlatSpec with MockFactory {
   }
 
   they can "get when chained" in {
+    import Arbitrary._
+    import Gen._
     import ScalacheckShapeless._
 
-    forAll { (heads: Int, credential: Credential, tails: Int) =>
+    forAll(choose(0, 3), arbitrary[Credential], choose(0, 3)) { (heads, credential, tails) =>
       val providers: Seq[Provider] = {
         (Seq.fill(heads) {
           val p = mock[Provider]
