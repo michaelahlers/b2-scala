@@ -1,8 +1,14 @@
-lazy val b2 = (project in file("."))
+lazy val `b2` = (project in file("."))
   .configs(IntegrationTest)
-  .aggregate(core)
+  .aggregate(
+    `core`,
+    `core-play-json`
+  )
 
-lazy val core = (project in file("modules") / "core")
+lazy val `core` = (project in file("modules") / "core")
+  .configs(IntegrationTest)
+
+lazy val `core-play-json` = (project in file("modules") / "core-play-json")
   .configs(IntegrationTest)
 
 publish / skip := true
