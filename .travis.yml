@@ -1,0 +1,14 @@
+language: scala
+
+jdk:
+  - oraclejdk8
+
+script:
+  - sbt '+test'
+  - sbt '+it:test'
+
+cache:
+  directories:
+    - $HOME/.cache
+    - $HOME/.ivy2
+    - $HOME/.sbt
