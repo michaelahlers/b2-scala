@@ -5,7 +5,6 @@ jdk:
   - openjdk11
 
 script:
-  - sbt '+compile'
   - sbt '+test'
   - sbt '+it:test'
 
