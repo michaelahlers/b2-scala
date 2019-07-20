@@ -30,20 +30,22 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
       import ScalacheckShapeless._
 
       forAll { (provider: Environment, credential: Credential) =>
-        org.joor.Reflect
-          .on("java.lang.ProcessEnvironment")
-          .set(
-            "theUnmodifiableEnvironment",
-            new java.util.HashMap[String, String]() {
-              putAll(System.getenv())
-              put(provider.key, credential.key)
-              put(provider.secret, credential.secret)
-            }
-          )
+        whenever(credential.key.trim.nonEmpty && credential.secret.trim.nonEmpty) {
+          org.joor.Reflect
+            .on("java.lang.ProcessEnvironment")
+            .set(
+              "theUnmodifiableEnvironment",
+              new java.util.HashMap[String, String]() {
+                putAll(System.getenv())
+                put(provider.key, credential.key)
+                put(provider.secret, credential.secret)
+              }
+            )
 
-        Provider
-          .environment(provider.key, provider.secret)
-          .get() should contain(credential)
+          Provider
+            .environment(provider.key, provider.secret)
+            .get() should contain(credential)
+        }
       }
     }
 
