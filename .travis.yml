@@ -1,11 +1,16 @@
 language: scala
 
+addons:
+  apt:
+    packages:
+      - expect-dev
+
 jdk:
   - openjdk8
 
 script:
-  - sbt '+test'
-  - sbt '+it:test'
+  - unbuffer sbt '+test'
+  - unbuffer sbt '+it:test'
 
 cache:
   directories:
