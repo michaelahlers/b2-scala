@@ -25,6 +25,6 @@ test_script:
   - sbt ";+test;+it:test"
 
 cache:
-  - '%USERPROFILE%\.cache -> **\dependencies.sbt, project\*'
+  - '%LOCALAPPDATA%\Coursier\Cache -> **\dependencies.sbt, project\*'
   - '%USERPROFILE%\.ivy2 -> **\dependencies.sbt, project\*'
   - '%USERPROFILE%\.sbt -> **\dependencies.sbt, project\*'
