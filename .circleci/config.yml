@@ -19,13 +19,12 @@ use_save_cache: &use_save_cache
   save_cache:
     key: *cache_key
     paths:
-      - ~/.coursier
+      - ~/.cache
       - ~/.ivy2
-      - ~/.m2
       - ~/.sbt
 
 workspace_path: &workspace_path
-                  /home/circleci
+                  /home/circleci/project
 
 use_workspace: &use_workspace
   attach_workspace:
