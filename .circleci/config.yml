@@ -39,7 +39,7 @@ jobs:
       - checkout
       - run: git ls-files dependencies.sbt **/dependencies.sbt project/* | xargs git ls-tree HEAD > commits
       - *use_restore_cache
-      - run: sbt ';+compile;+test:compile;+it:compile'
+      - run: sbt ';clean;+compile;+test:compile;+it:compile'
       - *use_save_cache
       - persist_to_workspace:
           root: *workspace_path
