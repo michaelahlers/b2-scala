@@ -30,7 +30,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
       import ScalacheckShapeless._
 
       forAll { (provider: Environment, credential: Credential) =>
-        whenever(credential.key.trim.nonEmpty && credential.secret.trim.nonEmpty) {
+        whenever(2 == Set(provider.key, provider.secret).size) {
           org.joor.Reflect
             .on("java.lang.ProcessEnvironment")
             .set(
