@@ -24,7 +24,7 @@ use_save_cache: &use_save_cache
       - ~/.sbt
 
 workspace_path: &workspace_path
-                  /home/circleci/project
+                  /home/circleci
 
 use_workspace: &use_workspace
   attach_workspace:
@@ -38,7 +38,7 @@ jobs:
       - checkout
       - run: git ls-files dependencies.sbt **/dependencies.sbt project/* | xargs git ls-tree HEAD > commits
       - *use_restore_cache
-      - run: sbt ';clean;+compile;+test:compile;+it:compile'
+      - run: sbt ';+compile;+test:compile;+it:compile'
       - *use_save_cache
       - persist_to_workspace:
           root: *workspace_path
