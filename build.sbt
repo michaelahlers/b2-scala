@@ -10,5 +10,6 @@ lazy val `core` = (project in file("modules") / "core")
 
 lazy val `core-play-json` = (project in file("modules") / "core-play-json")
   .configs(IntegrationTest)
+  .dependsOn(`core`)
 
 publish / skip := true
