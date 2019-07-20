@@ -1,12 +1,15 @@
-# B2: Scala [![CircleCI][circle-ci-status-label]][circle-ci-job] [![Appveyor][appveyor-status-label]][appveyor-build] [![Codacy][codacy-status-label]][codacy-status]
+# B2: Scala [![TravisCI][travis-ci-status-badge]][travis-ci-build] [![Appveyor][appveyor-status-badge]][appveyor-build] [![Codacy][codacy-status-badge]][codacy-status]
 
 Scala libraries for Backblaze B2.
 
-[appveyor-status-label]: https://ci.appveyor.com/api/projects/status/9lflbg9hhbrhsidl/branch/v0.0.x?svg=true
+[appveyor-status-badge]: https://ci.appveyor.com/api/projects/status/9lflbg9hhbrhsidl/branch/v0.0.x?svg=true
 [appveyor-build]: https://ci.appveyor.com/project/michaelahlers/b2-scala/branch/v0.0.x
 
-[circle-ci-job]: https://circleci.com/gh/michaelahlers/b2-scala/tree/v0.0.x
-[circle-ci-status-label]: https://circleci.com/gh/michaelahlers/b2-scala/tree/v0.0.x.svg?style=svg
+[circle-ci-build]: https://circleci.com/gh/michaelahlers/b2-scala/tree/v0.0.x
+[circle-ci-status-badge]: https://circleci.com/gh/michaelahlers/b2-scala/tree/v0.0.x.svg?style=svg
 
-[codacy-status-label]: https://api.codacy.com/project/badge/Grade/baeeff0647e544399e7245e6f4110607
+[codacy-status-badge]: https://api.codacy.com/project/badge/Grade/baeeff0647e544399e7245e6f4110607
 [codacy-status]: https://codacy.com/app/michaelahlers/b2-scala
+
+[travis-ci-build]: https://www.travis-ci.org/michaelahlers/b2-scala
+[travis-ci-status-badge]: https://www.travis-ci.org/michaelahlers/b2-scala.svg?branch=v0.0.x
