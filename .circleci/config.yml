@@ -6,6 +6,7 @@ use_build: &use_build
 
 # See https://discuss.circleci.com/t/wildcard-pattern-cache-directories/5159/4 for details.
 cache_key: &cache_key
+             v1-{{ arch }}-{{ .Branch }}-{{ checksum "commits" }}
              v1-{{ arch }}-{{ checksum "commits" }}
              v1-
 
