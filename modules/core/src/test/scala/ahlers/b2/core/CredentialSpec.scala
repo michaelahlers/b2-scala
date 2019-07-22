@@ -7,7 +7,7 @@ import org.scalacheck._
 import org.scalamock.scalatest._
 import org.scalatest.Matchers._
 import org.scalatest.wordspec._
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks._
+import org.scalatestplus.scalacheck._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
@@ -17,6 +17,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
   "Providers" can {
 
     "get credentials directly" in {
+      import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
       forAll { credential: Credential =>
@@ -27,6 +28,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
     }
 
     "get credentials from environment" in {
+      import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
       forAll { (provider: Environment, credential: Credential) =>
@@ -50,6 +52,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
     }
 
     "get when chained" in {
+      import ScalaCheckPropertyChecks._
       import Arbitrary._
       import Gen._
       import ScalacheckShapeless._

@@ -7,7 +7,8 @@ ThisBuild / crossScalaVersions ++=
 /* TODO: Set Cats release version. */
 
 ThisBuild / libraryDependencies ++=
-  "org.typelevel" %% "cats-core" % "2.0.0-M4" ::
+  "com.github.pathikrit" %% "better-files" % "3.8.0" ::
+    "org.typelevel" %% "cats-core" % "2.0.0-M4" ::
     "org.scalactic" %% "scalactic" % "3.0.8" ::
     Nil
 
