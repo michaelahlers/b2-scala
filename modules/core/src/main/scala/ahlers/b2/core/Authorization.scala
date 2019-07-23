@@ -25,6 +25,7 @@ object Authorization {
   case class Bucket(
       id: Option[String],
       name: Option[String]
+      capabilities: Set[Capability]
   )
 
   type Token = String
