@@ -1,7 +1,5 @@
-package ahlers.b2.core
+package ahlers.b2.core.api.v2
 
-import ahlers.b2.core.Credential.Provider._
-import ahlers.b2.core.Credential._
 import cats.syntax.option._
 import org.scalacheck._
 import org.scalamock.scalatest._
@@ -15,6 +13,9 @@ import org.scalatestplus.scalacheck._
 class CredentialSpec extends AnyWordSpec with MockFactory {
 
   "Providers" can {
+
+    import Credential._
+    import Provider._
 
     "get credentials directly" in {
       import ScalaCheckPropertyChecks._
@@ -52,9 +53,9 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
     }
 
     "get when chained" in {
-      import ScalaCheckPropertyChecks._
       import Arbitrary._
       import Gen._
+      import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
       forAll(choose(0, 3), arbitrary[Credential], choose(0, 3)) { (heads, credential, tails) =>

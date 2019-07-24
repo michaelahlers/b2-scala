@@ -1,4 +1,4 @@
-package ahlers.b2.core
+package ahlers.b2.core.api.v2
 
 import enumeratum._
 
