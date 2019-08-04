@@ -47,7 +47,8 @@ trait PlayJsonFormats {
         case DeleteFiles => "deleteFiles"
       }
 
-    implicit def FormatUrl: Format[Url] = ???
+    implicit val FormatUrl: Format[Url] =
+      implicitly[Format[String]].inmap(Url.parse, _.toString)
 
     implicit val FormatAccount:Format[Account] =
       (__ \ "accountId").format[String].inmap(Account, _.id)
@@ -69,7 +70,7 @@ trait PlayJsonFormats {
       .apply(PartSizes.apply, unlift(PartSizes.unapply))
 
     ((__).format[Account] and
-      (__).format[Allowed] and
+      (__ \ "allowed").format[Allowed] and
       (__ \ "authorizationToken").format[Token] and
       (__).format[PartSizes] and
       (__ \ "apiUrl").format[Url] and
