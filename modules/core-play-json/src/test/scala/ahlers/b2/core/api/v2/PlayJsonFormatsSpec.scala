@@ -28,7 +28,7 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
 
       inside(Resource.my.getAsStream("authorize-account-response.json").autoClosed(parse)) {
         case response =>
-          toJson(response.as[Authorization]) should equal(response)
+          toJson(response.as[Authorization]) should equal(response)(after being nullsRemoved)
       }
 
       forAll { x: Authorization =>
@@ -50,14 +50,27 @@ object PlayJsonFormatsSpec {
 
   implicit def arbUrl: Arbitrary[Url] = Arbitrary(identifier.map(Url.parse))
 
-  implicit lazy val EqJsValue: Equality[JsValue] = {
-    case (x: JsObject, y: JsObject) =>
-      x.fields forall {
-        case (k, v) =>
-          v === (y \ k).getOrElse(JsNull)
+  val nullsRemoved: Uniformity[JsValue] = new Uniformity[JsValue] {
+
+    override def normalizedCanHandle(x: Any) = x.isInstanceOf[JsValue]
+
+    override def normalizedOrSame(x: Any) =
+      x match {
+        case y: JsValue => normalized(y)
+        case _          => x
       }
-    case (x, y) =>
-      x == y
+
+    override def normalized(x: JsValue) = x match {
+      case JsObject(xs) =>
+        JsObject {
+          xs flatMap {
+            case (_, JsNull) => None
+            case (k, v)      => Some((k, normalized(v)))
+          }
+        }
+      case x => x
+    }
+
   }
 
 }
