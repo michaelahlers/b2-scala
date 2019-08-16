@@ -1,6 +1,6 @@
-package ahlers.b2.core.api.v2
+package ahlers.b2.api.v2
 
-import ahlers.b2.core.api.v2.Authorization._
+import ahlers.b2.api.v2.Authorization._
 import io.lemonlabs.uri._
 
 /**

@@ -1,4 +1,4 @@
-package ahlers.b2.core.api.v2
+package ahlers.b2.api.v2
 
 import io.lemonlabs.uri._
 import play.api.libs.json._

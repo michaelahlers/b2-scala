@@ -1,4 +1,4 @@
-package ahlers.b2.core.api.v2
+package ahlers.b2.api.v2
 
 import better.files._
 import io.lemonlabs.uri._
