@@ -25,8 +25,8 @@ object Authorization {
    * @param bucket Present if the bucket's id. is available.
    */
   case class Allowed(
-      bucket: Option[Bucket],
       capabilities: Seq[Capability],
+      bucket: Option[Bucket],
       namePrefix: Option[String]
   )
 

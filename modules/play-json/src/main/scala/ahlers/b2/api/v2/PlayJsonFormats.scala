@@ -39,11 +39,8 @@ trait PlayJsonFormats {
     reads[AuthorizationJson] map { x =>
       Authorization(
         account = Account(x.accountId),
-        allowed = Allowed(
-          bucket = x.allowed.bucketId.map(Bucket(_, x.allowed.bucketName)),
-          capabilities = x.allowed.capabilities,
-          namePrefix = x.allowed.namePrefix
-        ),
+        allowed =
+          Allowed(capabilities = x.allowed.capabilities, bucket = x.allowed.bucketId.map(Bucket(_, x.allowed.bucketName)), namePrefix = x.allowed.namePrefix),
         token = x.authorizationToken,
         partSizes = PartSizes(x.absoluteMinimumPartSize, x.recommendedPartSize),
         service = x.apiUrl,
@@ -78,9 +75,9 @@ trait PlayJsonFormats {
         absoluteMinimumPartSize = x.partSizes.minimum,
         accountId = x.account.id,
         allowed = AuthorizationAllowedJson(
+          capabilities = x.allowed.capabilities,
           bucketId = x.allowed.bucket.map(_.id),
           bucketName = x.allowed.bucket.flatMap(_.name),
-          capabilities = x.allowed.capabilities,
           namePrefix = x.allowed.namePrefix
         ),
         apiUrl = x.service,
@@ -112,9 +109,9 @@ trait PlayJsonFormats {
 }
 
 private case class AuthorizationAllowedJson(
+    capabilities: Seq[Capability],
     bucketId: Option[String],
     bucketName: Option[String],
-    capabilities: Seq[Capability],
     namePrefix: Option[String]
 )
 
