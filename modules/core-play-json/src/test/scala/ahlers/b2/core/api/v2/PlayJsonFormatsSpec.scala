@@ -19,21 +19,20 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
 
   "Formats" can {
 
+    import Json._
     import PlayJsonFormats._
 
     "serialize authorization" in {
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
-      inside(Resource.my.getAsStream("authorize-account-response.json").autoClosed(Json.parse)) {
+      inside(Resource.my.getAsStream("authorize-account-response.json").autoClosed(parse)) {
         case response =>
-          val document = Json.toJson(response.as[Authorization])
-          println(s"${response.getClass}; ${document.getClass}")
-          foo should equal(response)
+          toJson(response.as[Authorization]) should equal(response)
       }
 
       forAll { x: Authorization =>
-        inside(Json.toJson(x)) {
+        inside(toJson(x)) {
           case response =>
             response.as[Authorization] should equal(x)
         }
@@ -49,17 +48,16 @@ object PlayJsonFormatsSpec {
 
   import Gen._
 
-  implicit def arbUrl:Arbitrary[Url] = Arbitrary(identifier.map(Url.parse))
+  implicit def arbUrl: Arbitrary[Url] = Arbitrary(identifier.map(Url.parse))
 
   implicit lazy val EqJsValue: Equality[JsValue] = {
-    case (x:JsObject, y: JsObject) =>
-      x.keys forall { key =>
-        (y \ key)
+    case (x: JsObject, y: JsObject) =>
+      x.fields forall {
+        case (k, v) =>
+          v === (y \ k).getOrElse(JsNull)
       }
-
-      x.fieldSet === y.fieldSet
     case (x, y) =>
-      x === y
+      x == y
   }
 
 }
