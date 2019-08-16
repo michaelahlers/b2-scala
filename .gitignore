@@ -1,3 +1,4 @@
+*.sc
 .idea
 .sbtopts
 /target
