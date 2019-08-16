@@ -24,7 +24,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
       forAll { credential: Credential =>
         Provider
           .direct(credential.key, credential.secret)
-          .get() should contain(credential)
+          .getCredential() should contain(credential)
       }
     }
 
@@ -47,7 +47,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
 
           Provider
             .environment(provider.key, provider.secret)
-            .get() should contain(credential)
+            .getCredential() should contain(credential)
         }
       }
     }
@@ -62,20 +62,20 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
         val providers: Seq[Provider] = {
           (Seq.fill(heads) {
             val p = mock[Provider]
-            (p.get _).expects().once().returns(none)
+            (p.getCredential _).expects().once().returns(none)
             p
           } :+ {
             val p = mock[Provider]
-            (p.get _).expects().once().returns(credential.some)
+            (p.getCredential _).expects().once().returns(credential.some)
             p
           }) ++ Seq.fill(tails) {
             val p = mock[Provider]
-            (p.get _).expects().never()
+            (p.getCredential _).expects().never()
             p
           }
         }
 
-        (providers reduce { _ | _ }).get() should contain(credential)
+        (providers reduce { _ | _ }).getCredential() should contain(credential)
       }
     }
 
