@@ -34,7 +34,7 @@ trait PlayJsonFormats {
       }
 
     implicit val WritesCapability: Writes[Capability] =
-      implicitly[Writes[String]] contramap [Capability] {
+      implicitly[Writes[String]] contramap {
         case ListKeys      => "listKeys"
         case WriteKeys     => "writeKeys"
         case DeleteKeys    => "deleteKeys"
