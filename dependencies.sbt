@@ -21,6 +21,6 @@ ThisBuild / libraryDependencies ++=
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3" % Test ::
     Nil
 
-ThisBuild / libraryDependencies ++=
-  "org.scalatest" %% "scalatest" % "3.0.8" % IntegrationTest ::
-    Nil
+//ThisBuild / libraryDependencies ++=
+//  "org.scalatest" %% "scalatest" % "3.0.8" % IntegrationTest ::
+//    Nil
