@@ -35,7 +35,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
       forAll { (provider: Environment, credential: Credential) =>
         whenever(2 == Set(provider.key, provider.secret).size) {
           org.joor.Reflect
-            .on("java.lang.ProcessEnvironment")
+            .onClass("java.lang.ProcessEnvironment")
             .set(
               "theUnmodifiableEnvironment",
               new java.util.HashMap[String, String]() {

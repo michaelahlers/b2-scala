@@ -4,5 +4,5 @@ libraryDependencies ++=
     Nil
 
 libraryDependencies ++=
-  "org.jooq" % "joor-java-8" % "0.9.7" % Test ::
+  "org.jooq" % "joor-java-8" % "0.9.12" % Test ::
     Nil
