@@ -4,8 +4,10 @@ import ahlers.b2.api.v2.Authorization._
 import io.lemonlabs.uri._
 
 /**
- *  @see [[https://backblaze.com/b2/docs/b2_authorize_account.html]]
+ * @see [[https://www.backblaze.com/b2/docs/b2_authorize_account.html]]
  */
+case class AuthorizeAccount(credential: Credential)
+
 case class Authorization(
     account: Account,
     allowed: Allowed,
