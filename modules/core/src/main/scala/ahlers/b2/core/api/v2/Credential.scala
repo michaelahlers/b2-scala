@@ -16,7 +16,7 @@ case class Credential(key: String, secret: String)
 object Credential {
 
   trait Provider {
-    def getCredential(): Option[Credential]
+    def find(): Option[Credential]
   }
 
   object Provider {
@@ -28,11 +28,11 @@ object Credential {
     def environment(key: String, secret: String): Provider = Environment(key, secret)
 
     case class Direct(credential: Credential) extends Provider {
-      override def getCredential() = credential.some
+      override def find() = credential.some
     }
 
     case class Environment(key: String, secret: String) extends Provider {
-      override def getCredential() =
+      override def find() =
         for {
           k <- sys.env.get(key)
           s <- sys.env.get(secret)
@@ -42,7 +42,7 @@ object Credential {
     case class Chain(providers: NonEmptyList[Provider]) extends Provider {
 
       /** Returns the first [[Credential]] from the chained [[Provider providers]]. */
-      override def getCredential() = providers.collectFirstSome(_.getCredential())
+      override def find() = providers.collectFirstSome(_.find())
 
     }
 
