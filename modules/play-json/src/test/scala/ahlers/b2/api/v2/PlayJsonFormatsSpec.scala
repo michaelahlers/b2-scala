@@ -26,7 +26,7 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
-      inside(Resource.my.getAsStream("authorize-account-response.json").autoClosed(parse)) {
+      inside(Resource.my.getAsStream("authorize-account-response.json").autoClosed(Json.parse)) {
         case response =>
           toJson(response.as[Authorization]) should equal(response)(after being nullsRemoved)
       }

@@ -2,7 +2,8 @@ package ahlers.b2.api.v2
 
 import io.lemonlabs.uri._
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
+
+import scala.util._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
@@ -11,7 +12,7 @@ object PlayJsonFormats extends PlayJsonFormats
 
 trait PlayJsonFormats {
 
-  implicit def FormatAuthorization: Format[Authorization] = {
+  implicit def ReadsAuthorization: Reads[Authorization] = {
     import Authorization._
     import Allowed._
     import Capability._
@@ -33,6 +34,28 @@ trait PlayJsonFormats {
         case x               => JsError(JsonValidationError("error.authorization.capability.unknown", x))
       }
 
+    implicit val ReadsAllowedJson: Reads[AuthorizationAllowedJson] = reads[AuthorizationAllowedJson]
+
+    reads[AuthorizationJson] map { x =>
+      Authorization(
+        account = Account(x.accountId),
+        allowed = Allowed(
+          bucket = x.allowed.bucketId.map(Bucket(_, x.allowed.bucketName)),
+          capabilities = x.allowed.capabilities,
+          namePrefix = x.allowed.namePrefix
+        ),
+        token = x.authorizationToken,
+        partSizes = PartSizes(x.absoluteMinimumPartSize, x.recommendedPartSize),
+        service = x.apiUrl,
+        download = x.downloadUrl
+      )
+    }
+  }
+
+  implicit def WritesAuthorization: Writes[Authorization] = {
+    import Capability._
+    import Json._
+
     implicit val WritesCapability: Writes[Capability] =
       implicitly[Writes[String]] contramap {
         case ListKeys      => "listKeys"
@@ -48,27 +71,9 @@ trait PlayJsonFormats {
         case DeleteFiles   => "deleteFiles"
       }
 
-    implicit val FormatUrl: Format[Url] =
-      implicitly[Format[String]].inmap(Url.parse, _.toString)
+    implicit val WritesAllowedJson: Writes[AuthorizationAllowedJson] = writes[AuthorizationAllowedJson]
 
-    implicit val FormatAllowedJson: Format[AuthorizationAllowedJson] = format[AuthorizationAllowedJson]
-
-    implicit val ReadsAuthorization: Reads[Authorization] = reads[AuthorizationJson] map { x =>
-      Authorization(
-        account = Account(x.accountId),
-        allowed = Allowed(
-          bucket = x.allowed.bucketId.map(Bucket(_, x.allowed.bucketName)),
-          capabilities = x.allowed.capabilities,
-          namePrefix = x.allowed.namePrefix
-        ),
-        token = x.authorizationToken,
-        partSizes = PartSizes(x.absoluteMinimumPartSize, x.recommendedPartSize),
-        service = x.apiUrl,
-        download = x.downloadUrl
-      )
-    }
-
-    implicit val WritesAuthorization: Writes[Authorization] = writes[AuthorizationJson] contramap { x =>
+    writes[AuthorizationJson] contramap { x =>
       AuthorizationJson(
         absoluteMinimumPartSize = x.partSizes.minimum,
         accountId = x.account.id,
@@ -84,9 +89,25 @@ trait PlayJsonFormats {
         recommendedPartSize = x.partSizes.recommended
       )
     }
-
-    Format(ReadsAuthorization, WritesAuthorization)
   }
+
+  implicit val ReadsScalaUrl: Reads[Url] = {
+    implicitly[Reads[String]].reads(_) flatMap { x =>
+      Url.parseTry(x) match {
+        case Success(x) => JsSuccess(x)
+        case Failure(reason) =>
+          JsError {
+            Option(reason)
+              .map(_.getMessage)
+              .map(JsonValidationError("error.expected.url", x, _))
+              .getOrElse(JsonValidationError("error.expected.url", x))
+          }
+      }
+    }
+  }
+
+  implicit val WritesScalaUrl: Writes[Url] =
+    implicitly[Writes[String]].contramap(_.toString)
 
 }
 
