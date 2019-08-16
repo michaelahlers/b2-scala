@@ -6,7 +6,6 @@ jdk:
 
 script:
   - sbt '+test'
-  - sbt '+it:test'
 
 cache:
   directories:
