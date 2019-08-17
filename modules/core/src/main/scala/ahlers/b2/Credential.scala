@@ -1,4 +1,4 @@
-package ahlers.b2.api.v2
+package ahlers.b2
 
 import cats.data._
 import cats.syntax.foldable._

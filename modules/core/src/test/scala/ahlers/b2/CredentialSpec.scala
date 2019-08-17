@@ -1,4 +1,4 @@
-package ahlers.b2.api.v2
+package ahlers.b2
 
 import cats.syntax.option._
 import org.scalacheck._
