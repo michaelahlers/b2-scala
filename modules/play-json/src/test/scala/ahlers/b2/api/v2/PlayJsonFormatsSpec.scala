@@ -1,11 +1,11 @@
 package ahlers.b2.api.v2
 
 import better.files._
-import io.lemonlabs.uri._
 import org.scalacheck._
 import org.scalactic._
 import org.scalatest.wordspec._
 import org.scalatest.Inside._
+import org.scalatest.Inspectors
 import org.scalatest.Matchers._
 import org.scalatestplus.scalacheck._
 import play.api.libs.json._
@@ -26,9 +26,11 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
-      inside(Resource.my.getAsStream("authorize-account-response.json").autoClosed(Json.parse)) {
-        case response =>
-          toJson(response.as[AccountAuthorization]) should equal(response)(after being nullsRemoved)
+      Inspectors.forAll {
+        Resource.my.getAsStream("authorize-account-response_0.json").autoClosed(Json.parse) ::
+          Nil
+      } { response =>
+        toJson(response.as[AccountAuthorization]) should equal(response)(after being nullsRemoved)
       }
 
       forAll { x: AccountAuthorization =>
@@ -49,8 +51,6 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
 object PlayJsonFormatsSpec {
 
   import Gen._
-
-  implicit def arbUrl: Arbitrary[Url] = Arbitrary(identifier.map(Url.parse))
 
   val nullsRemoved: Uniformity[JsValue] = new Uniformity[JsValue] {
 
