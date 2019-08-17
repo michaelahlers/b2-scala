@@ -9,7 +9,7 @@ case class Bucket(
     bucketName: String,
     bucketType: BucketType,
     bucketInfo: Map[String, String],
-    corsRules: Seq[CorsRule],
-    lifecycleRules: Seq[LifecycleRule],
-    revision: Long
+    corsRules: Option[Seq[CorsRule]],
+    lifecycleRules: Option[Seq[LifecycleRule]],
+    revision: Option[Long]
 )

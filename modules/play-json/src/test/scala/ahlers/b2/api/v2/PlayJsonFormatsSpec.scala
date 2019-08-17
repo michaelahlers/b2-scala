@@ -73,6 +73,30 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
       forAll(verifyFormat(_: LifecycleRule))
     }
 
+    "serialize list buckets" in {
+      import ScalaCheckPropertyChecks._
+      import ScalacheckShapeless._
+
+      Inspectors.forAll {
+        Resource.my.getAsStream("list-buckets-request_0.json").autoClosed(Json.parse) ::
+          Nil
+      } { verifyFormat[ListBuckets] }
+
+      forAll(verifyFormat(_: ListBuckets))
+    }
+
+    "serialize bucket list" in {
+      import ScalaCheckPropertyChecks._
+      import ScalacheckShapeless._
+
+      Inspectors.forAll {
+        Resource.my.getAsStream("list-buckets-response_0.json").autoClosed(Json.parse) ::
+          Nil
+      } { verifyFormat[BucketList] }
+
+      forAll(verifyFormat(_: BucketList))
+    }
+
     "serialize operation" in {
       Inspectors.forAll(Operation.values) {
         verifyFormat(_)

@@ -10,29 +10,26 @@ object PlayJsonFormats extends PlayJsonFormats
 
 trait PlayJsonFormats {
 
-  implicit val ReadsAccountAuthorization: Reads[AccountAuthorization] = {
+  implicit val FormatAccountAuthorization: Format[AccountAuthorization] = {
     import AccountAuthorization._
-    implicit val ReadsAllowed: Reads[Allowed] = Json.reads
-    Json.reads
-  }
-
-  implicit val WritesAccountAuthorization: OWrites[AccountAuthorization] = {
-    import AccountAuthorization._
-    implicit val WritesAllowed: OWrites[Allowed] = Json.writes[Allowed]
-    Json.writes[AccountAuthorization]
+    implicit val FormatAllowed: Format[Allowed] = Json.format
+    Json.format
   }
 
   implicit lazy val FormatBucketType: Format[BucketType] = EnumFormats.formats(BucketType)
 
   implicit lazy val FormatCapability: Format[Capability] = EnumFormats.formats(Capability)
 
-  implicit val ReadsCorsRule: Reads[CorsRule] = Json.reads
+  implicit val FormatCorsRule: Format[CorsRule] = Json.format
 
-  implicit val WritesCorsRule: OWrites[CorsRule] = Json.writes[CorsRule]
+  implicit val FormatLifecycleRule: Format[LifecycleRule] = Json.format
 
-  implicit val ReadsLifecycleRule: Reads[LifecycleRule] = Json.reads
+  implicit val FormatListBuckets: Format[ListBuckets] = Json.format
 
-  implicit val WritesLifecycleRule: OWrites[LifecycleRule] = Json.writes[LifecycleRule]
+  implicit val FormatBucketList: Format[BucketList] = {
+    implicit val FormatBucket: Format[Bucket] = Json.format
+    Json.format
+  }
 
   implicit lazy val FormatOperation: Format[Operation] = EnumFormats.formats(Operation)
 
