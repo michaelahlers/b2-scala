@@ -12,8 +12,8 @@ object PlayJsonFormats extends PlayJsonFormats
 
 trait PlayJsonFormats {
 
-  implicit def ReadsAuthorization: Reads[Authorization] = {
-    import Authorization._
+  implicit def ReadsAccountAuthorization: Reads[AccountAuthorization] = {
+    import AccountAuthorization._
     import Allowed._
     import Capability._
     import Json._
@@ -34,10 +34,10 @@ trait PlayJsonFormats {
         case x               => JsError(JsonValidationError("error.authorization.capability.unknown", x))
       }
 
-    implicit val ReadsAllowedJson: Reads[AuthorizationAllowedJson] = reads[AuthorizationAllowedJson]
+    implicit val ReadsAllowedJson: Reads[AuthorizationAllowedShape] = reads[AuthorizationAllowedShape]
 
-    reads[AuthorizationJson] map { x =>
-      Authorization(
+    reads[AccountAuthorizationShape] map { x =>
+      AccountAuthorization(
         account = Account(x.accountId),
         allowed =
           Allowed(capabilities = x.allowed.capabilities, bucket = x.allowed.bucketId.map(Bucket(_, x.allowed.bucketName)), namePrefix = x.allowed.namePrefix),
@@ -49,7 +49,7 @@ trait PlayJsonFormats {
     }
   }
 
-  implicit def WritesAuthorization: Writes[Authorization] = {
+  implicit def WritesAccountAuthorization: Writes[AccountAuthorization] = {
     import Capability._
     import Json._
 
@@ -68,13 +68,13 @@ trait PlayJsonFormats {
         case DeleteFiles   => "deleteFiles"
       }
 
-    implicit val WritesAllowedJson: Writes[AuthorizationAllowedJson] = writes[AuthorizationAllowedJson]
+    implicit val WritesAllowedJson: Writes[AuthorizationAllowedShape] = writes[AuthorizationAllowedShape]
 
-    writes[AuthorizationJson] contramap { x =>
-      AuthorizationJson(
+    writes[AccountAuthorizationShape] contramap { x =>
+      AccountAuthorizationShape(
         absoluteMinimumPartSize = x.partSizes.minimum,
         accountId = x.account.id,
-        allowed = AuthorizationAllowedJson(
+        allowed = AuthorizationAllowedShape(
           capabilities = x.allowed.capabilities,
           bucketId = x.allowed.bucket.map(_.id),
           bucketName = x.allowed.bucket.flatMap(_.name),
@@ -108,17 +108,17 @@ trait PlayJsonFormats {
 
 }
 
-private case class AuthorizationAllowedJson(
+private case class AuthorizationAllowedShape(
     capabilities: Seq[Capability],
     bucketId: Option[String],
     bucketName: Option[String],
     namePrefix: Option[String]
 )
 
-private case class AuthorizationJson(
+private case class AccountAuthorizationShape(
     absoluteMinimumPartSize: Long,
     accountId: String,
-    allowed: AuthorizationAllowedJson,
+    allowed: AuthorizationAllowedShape,
     apiUrl: Url,
     authorizationToken: String,
     downloadUrl: Url,

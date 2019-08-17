@@ -22,19 +22,19 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
     import Json._
     import PlayJsonFormats._
 
-    "serialize authorization" in {
+    "serialize account authorization" in {
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
       inside(Resource.my.getAsStream("authorize-account-response.json").autoClosed(Json.parse)) {
         case response =>
-          toJson(response.as[Authorization]) should equal(response)(after being nullsRemoved)
+          toJson(response.as[AccountAuthorization]) should equal(response)(after being nullsRemoved)
       }
 
-      forAll { x: Authorization =>
+      forAll { x: AccountAuthorization =>
         inside(toJson(x)) {
           case response =>
-            response.as[Authorization] should equal(x)
+            response.as[AccountAuthorization] should equal(x)
         }
       }
 

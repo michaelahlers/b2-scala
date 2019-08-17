@@ -1,7 +1,7 @@
 package ahlers.b2.api.v2
 
-import ahlers.b2.api.v2.Authorization.Allowed._
-import ahlers.b2.api.v2.Authorization._
+import ahlers.b2.api.v2.AccountAuthorization.Allowed._
+import ahlers.b2.api.v2.AccountAuthorization._
 import io.lemonlabs.uri._
 
 /**
@@ -9,7 +9,7 @@ import io.lemonlabs.uri._
  */
 case class AuthorizeAccount(credential: Credential)
 
-case class Authorization(
+case class AccountAuthorization(
     account: Account,
     allowed: Allowed,
     token: Token,
@@ -18,7 +18,7 @@ case class Authorization(
     download: Url
 )
 
-object Authorization {
+object AccountAuthorization {
 
   /**
    * @param bucket Present if the bucket's id. is available.
