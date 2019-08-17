@@ -12,7 +12,13 @@ scalacOptions --=
  * Need not be so strict with tests.
  */
 Test / scalacOptions --=
-  "-Wunused:imports" ::
+  "-Wunused:implicits" ::
+    "-Wunused:imports" ::
+    "-Wunused:locals" ::
+    "-Wunused:params" ::
+    "-Wunused:privates" ::
     "-Ywarn-unused-import" ::
     "-Ywarn-unused:imports" ::
+    "-Ywarn-unused:locals" ::
+    "-Ywarn-unused:privates" ::
     Nil
