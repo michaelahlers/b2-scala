@@ -55,19 +55,15 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
       }
     }
 
-    "serialize lifecycle rule" in {
+    "serialize CORS rule" in {
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
       Inspectors.forAll {
-        Resource.my.getAsStream("lifecycle-rule_0.json").autoClosed(Json.parse) ::
-          Resource.my.getAsStream("lifecycle-rule_1.json").autoClosed(Json.parse) ::
-          Resource.my.getAsStream("lifecycle-rule_2.json").autoClosed(Json.parse) ::
-          Resource.my.getAsStream("lifecycle-rule_3.json").autoClosed(Json.parse) ::
-          Nil
-      } { verifyFormat[LifecycleRule] }
+        Resource.my.getAsStream("cors-rules_0.json").autoClosed(Json.parse(_).as[Seq[JsValue]])
+      } { verifyFormat[CorsRule] }
 
-      forAll(verifyFormat(_: LifecycleRule))
+      forAll(verifyFormat(_: CorsRule))
     }
 
     "serialize lifecycle rule" in {

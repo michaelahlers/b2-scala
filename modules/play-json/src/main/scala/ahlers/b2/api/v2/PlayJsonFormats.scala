@@ -56,6 +56,10 @@ trait PlayJsonFormats {
     }
   }
 
+  implicit val ReadsCorsRule: Reads[CorsRule] = Json.reads
+
+  implicit val WritesCorsRule: OWrites[CorsRule] = Json.writes[CorsRule]
+
   implicit val ReadsLifecycleRule: Reads[LifecycleRule] = Json.reads
 
   implicit val WritesLifecycleRule: OWrites[LifecycleRule] = Json.writes[LifecycleRule]
