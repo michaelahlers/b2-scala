@@ -42,6 +42,8 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
 
   }
 
+  "serialize list buckets" in {}
+
 }
 
 object PlayJsonFormatsSpec {

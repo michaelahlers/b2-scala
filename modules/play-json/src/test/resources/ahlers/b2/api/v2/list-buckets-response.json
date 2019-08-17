@@ -1,0 +1,27 @@
+{
+  "buckets": [
+    {
+      "accountId": "30f20426f0b1",
+      "bucketId": "4a48fe8875c6214145260818",
+      "bucketInfo": {},
+      "bucketName" : "Kitten-Videos",
+      "bucketType": "allPrivate",
+      "lifecycleRules": []
+    },
+    {
+      "accountId": "30f20426f0b1",
+      "bucketId" : "5b232e8875c6214145260818",
+      "bucketInfo": {},
+      "bucketName": "Puppy-Videos",
+      "bucketType": "allPublic",
+      "lifecycleRules": []
+    },
+    {
+      "accountId": "30f20426f0b1",
+      "bucketId": "87ba238875c6214145260818",
+      "bucketInfo": {},
+      "bucketName": "Vacation-Pictures",
+      "bucketType" : "allPrivate",
+      "lifecycleRules": []
+    } ]
+}

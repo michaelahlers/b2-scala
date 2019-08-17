@@ -34,7 +34,7 @@ trait PlayJsonFormats {
         case x               => JsError(JsonValidationError("error.authorization.capability.unknown", x))
       }
 
-    implicit val ReadsAllowedJson: Reads[AuthorizationAllowedShape] = reads[AuthorizationAllowedShape]
+    implicit val ReadsAllowedJson: Reads[AuthorizationAllowedModel] = reads[AuthorizationAllowedModel]
 
     reads[AccountAuthorizationShape] map { x =>
       AccountAuthorization(
@@ -68,13 +68,13 @@ trait PlayJsonFormats {
         case DeleteFiles   => "deleteFiles"
       }
 
-    implicit val WritesAllowedJson: Writes[AuthorizationAllowedShape] = writes[AuthorizationAllowedShape]
+    implicit val WritesAllowedJson: Writes[AuthorizationAllowedModel] = writes[AuthorizationAllowedModel]
 
     writes[AccountAuthorizationShape] contramap { x =>
       AccountAuthorizationShape(
         absoluteMinimumPartSize = x.partSizes.minimum,
         accountId = x.account.id,
-        allowed = AuthorizationAllowedShape(
+        allowed = AuthorizationAllowedModel(
           capabilities = x.allowed.capabilities,
           bucketId = x.allowed.bucket.map(_.id),
           bucketName = x.allowed.bucket.flatMap(_.name),
@@ -108,7 +108,7 @@ trait PlayJsonFormats {
 
 }
 
-private case class AuthorizationAllowedShape(
+private case class AuthorizationAllowedModel(
     capabilities: Seq[Capability],
     bucketId: Option[String],
     bucketName: Option[String],
@@ -118,7 +118,7 @@ private case class AuthorizationAllowedShape(
 private case class AccountAuthorizationShape(
     absoluteMinimumPartSize: Long,
     accountId: String,
-    allowed: AuthorizationAllowedShape,
+    allowed: AuthorizationAllowedModel,
     apiUrl: Url,
     authorizationToken: String,
     downloadUrl: Url,
