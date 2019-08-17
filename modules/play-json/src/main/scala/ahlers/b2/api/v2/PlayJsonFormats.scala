@@ -9,7 +9,7 @@ object PlayJsonFormats extends PlayJsonFormats
 
 trait PlayJsonFormats {
 
-  implicit def ReadsAccountAuthorization: Reads[AccountAuthorization] = {
+  implicit val ReadsAccountAuthorization: Reads[AccountAuthorization] = {
     import AccountAuthorization._
     import Capability._
 
@@ -34,7 +34,7 @@ trait PlayJsonFormats {
     Json.reads
   }
 
-  implicit def WritesAccountAuthorization: Writes[AccountAuthorization] = {
+  implicit val WritesAccountAuthorization: OWrites[AccountAuthorization] = {
     import AccountAuthorization._
     import Capability._
 
@@ -53,9 +53,13 @@ trait PlayJsonFormats {
         case DeleteFiles   => "deleteFiles"
       }
 
-    implicit val WritesAllowed: Writes[Allowed] = Json.writes
+    implicit val WritesAllowed: OWrites[Allowed] = Json.writes[Allowed]
 
-    Json.writes
+    Json.writes[AccountAuthorization]
   }
+
+  implicit val ReadsLifecycleRule: Reads[LifecycleRule] = Json.reads
+
+  implicit val WritesLifecycleRule: OWrites[LifecycleRule] = Json.writes[LifecycleRule]
 
 }

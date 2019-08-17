@@ -42,9 +42,30 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
 
     }
 
-  }
+    "serialize lifecycle rule" in {
+      import ScalaCheckPropertyChecks._
+      import ScalacheckShapeless._
 
-  "serialize list buckets" in {}
+      Inspectors.forAll {
+        Resource.my.getAsStream("lifecycle-rule_0.json").autoClosed(Json.parse) ::
+          Resource.my.getAsStream("lifecycle-rule_1.json").autoClosed(Json.parse) ::
+          Resource.my.getAsStream("lifecycle-rule_2.json").autoClosed(Json.parse) ::
+          Resource.my.getAsStream("lifecycle-rule_3.json").autoClosed(Json.parse) ::
+          Nil
+      } { response =>
+        toJson(response.as[LifecycleRule]) should equal(response)(after being nullsRemoved)
+      }
+
+      forAll { x: LifecycleRule =>
+        inside(toJson(x)) {
+          case rule =>
+            rule.as[LifecycleRule] should equal(x)
+        }
+      }
+
+    }
+
+  }
 
 }
 

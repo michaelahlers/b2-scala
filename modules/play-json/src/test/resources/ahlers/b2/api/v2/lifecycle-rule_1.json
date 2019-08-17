@@ -1,0 +1,5 @@
+{
+  "daysFromHidingToDeleting": 1,
+  "daysFromUploadingToHiding": 7,
+  "fileNamePrefix": "logs/"
+}
