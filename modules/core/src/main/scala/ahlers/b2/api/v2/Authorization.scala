@@ -1,5 +1,6 @@
 package ahlers.b2.api.v2
 
+import ahlers.b2.api.v2.Authorization.Allowed._
 import ahlers.b2.api.v2.Authorization._
 import io.lemonlabs.uri._
 
@@ -18,10 +19,6 @@ case class Authorization(
 )
 
 object Authorization {
-
-  import Allowed._
-
-  case class Account(id: String)
 
   /**
    * @param bucket Present if the bucket's id. is available.
