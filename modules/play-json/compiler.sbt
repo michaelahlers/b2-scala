@@ -18,7 +18,9 @@ Test / scalacOptions --=
     "-Wunused:params" ::
     "-Wunused:privates" ::
     "-Ywarn-unused-import" ::
+    "-Ywarn-unused:implicits" ::
     "-Ywarn-unused:imports" ::
     "-Ywarn-unused:locals" ::
+    "-Ywarn-unused:params" ::
     "-Ywarn-unused:privates" ::
     Nil
