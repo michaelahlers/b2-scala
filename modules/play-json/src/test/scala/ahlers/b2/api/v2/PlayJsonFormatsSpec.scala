@@ -21,7 +21,6 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
 
   "Formats" can {
 
-    import Json._
     import PlayJsonFormats._
 
     "serialize account authorization" in {
@@ -36,22 +35,15 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
       forAll(verifyFormat(_: AccountAuthorization))
     }
 
+    "serialize bucket type" in {
+      Inspectors.forAll(BucketType.values) {
+        verifyFormat(_)
+      }
+    }
+
     "serialize capability" in {
-      import Capability._
       Inspectors.forAll(Capability.values) {
-        verifyFormat(_) withResult [String] {
-          case (ListKeys, y)      => y should contain("listKeys")
-          case (WriteKeys, y)     => y should contain("writeKeys")
-          case (DeleteKeys, y)    => y should contain("deleteKeys")
-          case (ListBuckets, y)   => y should contain("listBuckets")
-          case (WriteBuckets, y)  => y should contain("writeBuckets")
-          case (DeleteBuckets, y) => y should contain("deleteBuckets")
-          case (ListFiles, y)     => y should contain("listFiles")
-          case (ReadFiles, y)     => y should contain("readFiles")
-          case (ShareFiles, y)    => y should contain("shareFiles")
-          case (WriteFiles, y)    => y should contain("writeFiles")
-          case (DeleteFiles, y)   => y should contain("deleteFiles")
-        }
+        verifyFormat(_)
       }
     }
 
@@ -82,14 +74,8 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
     }
 
     "serialize operation" in {
-      import Operation._
       Inspectors.forAll(Operation.values) {
-        verifyFormat(_) withResult [String] {
-          case (DownloadFileByName, y) => y should contain("b2_download_file_by_name")
-          case (DownloadFileById, y)   => y should contain("b2_download_file_by_id")
-          case (UploadFile, y)         => y should contain("b2_upload_file")
-          case (UploadPart, y)         => y should contain("b2_upload_part")
-        }
+        verifyFormat(_)
       }
     }
 

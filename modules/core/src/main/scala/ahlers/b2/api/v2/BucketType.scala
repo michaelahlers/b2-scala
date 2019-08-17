@@ -1,16 +1,17 @@
 package ahlers.b2.api.v2
 
-import enumeratum._
+import enumeratum.values._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-sealed trait BucketType extends EnumEntry
-object BucketType extends Enum[BucketType] {
+sealed abstract class BucketType(val value: String) extends StringEnumEntry
+object BucketType extends StringEnum[BucketType] {
 
-  case object AllPrivate extends BucketType
-  case object AllPublic extends BucketType
-  case object Snapshot extends BucketType
+  case object All extends BucketType("all")
+  case object AllPrivate extends BucketType("allPrivate")
+  case object AllPublic extends BucketType("allPublic")
+  case object Snapshot extends BucketType("snapshot")
 
   override val values = findValues
 

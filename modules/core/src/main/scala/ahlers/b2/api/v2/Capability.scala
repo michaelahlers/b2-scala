@@ -1,26 +1,26 @@
 package ahlers.b2.api.v2
 
-import enumeratum._
+import enumeratum.values._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-sealed trait Capability extends EnumEntry
-object Capability extends Enum[Capability] {
+sealed abstract class Capability(val value: String) extends StringEnumEntry
+object Capability extends StringEnum[Capability] {
 
-  case object ListKeys extends Capability
-  case object WriteKeys extends Capability
-  case object DeleteKeys extends Capability
+  case object ListKeys extends Capability("listKeys")
+  case object WriteKeys extends Capability("writeKeys")
+  case object DeleteKeys extends Capability("deleteKeys")
 
-  case object ListBuckets extends Capability
-  case object WriteBuckets extends Capability
-  case object DeleteBuckets extends Capability
+  case object ListBuckets extends Capability("listBuckets")
+  case object WriteBuckets extends Capability("writeBuckets")
+  case object DeleteBuckets extends Capability("deleteBuckets")
 
-  case object ListFiles extends Capability
-  case object ReadFiles extends Capability
-  case object ShareFiles extends Capability
-  case object WriteFiles extends Capability
-  case object DeleteFiles extends Capability
+  case object ListFiles extends Capability("listFiles")
+  case object ReadFiles extends Capability("readFiles")
+  case object ShareFiles extends Capability("shareFiles")
+  case object WriteFiles extends Capability("writeFiles")
+  case object DeleteFiles extends Capability("deleteFiles")
 
   override val values = findValues
 
