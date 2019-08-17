@@ -70,6 +70,33 @@ class PlayJsonFormatsSpec extends AnyWordSpec {
       forAll(verifyFormat(_: LifecycleRule))
     }
 
+    "serialize lifecycle rule" in {
+      import ScalaCheckPropertyChecks._
+      import ScalacheckShapeless._
+
+      Inspectors.forAll {
+        Resource.my.getAsStream("lifecycle-rule_0.json").autoClosed(Json.parse) ::
+          Resource.my.getAsStream("lifecycle-rule_1.json").autoClosed(Json.parse) ::
+          Resource.my.getAsStream("lifecycle-rule_2.json").autoClosed(Json.parse) ::
+          Resource.my.getAsStream("lifecycle-rule_3.json").autoClosed(Json.parse) ::
+          Nil
+      } { verifyFormat[LifecycleRule] }
+
+      forAll(verifyFormat(_: LifecycleRule))
+    }
+
+    "serialize operation" in {
+      import Operation._
+      Inspectors.forAll(Operation.values) {
+        verifyFormat(_) withResult [String] {
+          case (DownloadFileByName, y) => y should contain("b2_download_file_by_name")
+          case (DownloadFileById, y)   => y should contain("b2_download_file_by_id")
+          case (UploadFile, y)         => y should contain("b2_upload_file")
+          case (UploadPart, y)         => y should contain("b2_upload_part")
+        }
+      }
+    }
+
   }
 
 }

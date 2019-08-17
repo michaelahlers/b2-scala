@@ -60,4 +60,25 @@ trait PlayJsonFormats {
 
   implicit val WritesLifecycleRule: OWrites[LifecycleRule] = Json.writes[LifecycleRule]
 
+  implicit lazy val ReadsOperation: Reads[Operation] = {
+    import Operation._
+    implicitly[Reads[String]].reads(_) flatMap {
+      case "b2_download_file_by_name" => JsSuccess(DownloadFileByName)
+      case "b2_download_file_by_id"   => JsSuccess(DownloadFileById)
+      case "b2_upload_file"           => JsSuccess(UploadFile)
+      case "b2_upload_part"           => JsSuccess(UploadPart)
+      case x                          => JsError(JsonValidationError("error.authorization.operation.unknown", x))
+    }
+  }
+
+  implicit lazy val WritesOperation: Writes[Operation] = {
+    import Operation._
+    implicitly[Writes[String]] contramap {
+      case DownloadFileByName => "b2_download_file_by_name"
+      case DownloadFileById   => "b2_download_file_by_id"
+      case UploadFile         => "b2_upload_file"
+      case UploadPart         => "b2_upload_part"
+    }
+  }
+
 }
