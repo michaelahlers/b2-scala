@@ -1,5 +1,9 @@
 language: scala
 
+os:
+  - linux
+  - osx
+
 jdk:
   - openjdk8
   - openjdk11
