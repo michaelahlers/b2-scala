@@ -10,18 +10,12 @@ jdk:
 
 matrix:
   include:
-    #- os: linux
-    #  jdk: openjdk8
-    #- os: linux
-    #  jdk: openjdk11
     - os: osx
       osx_image: xcode9.3
       jdk: openjdk8
   exclude:
     - os: osx
       jdk: openjdk8
-#- os: osx
-#  jdk: openjdk11
 
 script:
   - sbt "+test"
