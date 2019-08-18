@@ -11,7 +11,7 @@ jdk:
   - openjdk11
 
 script:
-  - sbt "+test"
+  - sbt '+test'
 
 cache:
   directories:
