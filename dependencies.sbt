@@ -18,6 +18,7 @@ ThisBuild / libraryDependencies ++=
     "org.scalacheck" %% "scalacheck" % "1.14.0" % Test ::
     "org.scalamock" %% "scalamock" % "4.4.0" % Test ::
     "org.scalatest" %% "scalatest" % "3.0.8" % Test ::
+    "org.scalatestplus" %% "scalatestplus-scalacheck" % "1.0.0-SNAP8" % Test ::
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3" % Test ::
     Nil
 

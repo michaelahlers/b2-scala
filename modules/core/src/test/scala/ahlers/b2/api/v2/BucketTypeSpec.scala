@@ -11,7 +11,7 @@ class BucketTypeSpec extends AnyFlatSpec {
 
   behavior of "Bucket Type"
 
-  they must "match protocol literals" in {
+  it must "specify protocol literals" in {
     import BucketType._
     Inspectors.forAll(BucketType.values) { x =>
       val y = x.value

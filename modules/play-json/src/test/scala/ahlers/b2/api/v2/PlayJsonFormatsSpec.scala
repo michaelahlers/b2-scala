@@ -4,7 +4,7 @@ import better.files._
 import org.scalacheck._
 import org.scalactic._
 import org.scalactic.source._
-import org.scalatest.wordspec._
+import org.scalatest.flatspec._
 import org.scalatest.Inside._
 import org.scalatest._
 import org.scalatest.Matchers._
@@ -15,94 +15,93 @@ import play.api.libs.json._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-class PlayJsonFormatsSpec extends AnyWordSpec {
+class PlayJsonFormatsSpec extends AnyFlatSpec { //with Schemas[JsValue] {
 
   import PlayJsonFormatsSpec._
+  import PlayJsonFormats._
 
-  "Formats" can {
+  behavior of "Formats"
 
-    import PlayJsonFormats._
+  //it must behave like serializeAccountAuthorization
 
-    "serialize account authorization" in {
-      import ScalaCheckPropertyChecks._
-      import ScalacheckShapeless._
+  it must "serialize account authorization" in {
+    import ScalaCheckPropertyChecks._
+    import ScalacheckShapeless._
 
-      Inspectors.forAll {
-        Resource.my.getAsStream("authorize-account-response_0.json").autoClosed(Json.parse) ::
-          Nil
-      } { verifyFormat[AccountAuthorization] }
+    Inspectors.forAll {
+      Resource.my.getAsStream("authorize-account-response_0.json").autoClosed(Json.parse) ::
+        Nil
+    } { verifyFormat[AccountAuthorization] }
 
-      forAll(verifyFormat(_: AccountAuthorization))
+    forAll(verifyFormat(_: AccountAuthorization))
+  }
+
+  it must "serialize bucket type" in {
+    Inspectors.forAll(BucketType.values) {
+      verifyFormat(_)
     }
+  }
 
-    "serialize bucket type" in {
-      Inspectors.forAll(BucketType.values) {
-        verifyFormat(_)
-      }
+  it must "serialize capability" in {
+    Inspectors.forAll(Capability.values) {
+      verifyFormat(_)
     }
+  }
 
-    "serialize capability" in {
-      Inspectors.forAll(Capability.values) {
-        verifyFormat(_)
-      }
+  it must "serialize CORS rule" in {
+    import ScalaCheckPropertyChecks._
+    import ScalacheckShapeless._
+
+    Inspectors.forAll {
+      Resource.my.getAsStream("cors-rules_0.json").autoClosed(Json.parse(_).as[Seq[JsValue]])
+    } { verifyFormat[CorsRule] }
+
+    forAll(verifyFormat(_: CorsRule))
+  }
+
+  it must "serialize lifecycle rule" in {
+    import ScalaCheckPropertyChecks._
+    import ScalacheckShapeless._
+
+    Inspectors.forAll {
+      Resource.my.getAsStream("lifecycle-rule_0.json").autoClosed(Json.parse) ::
+        Resource.my.getAsStream("lifecycle-rule_1.json").autoClosed(Json.parse) ::
+        Resource.my.getAsStream("lifecycle-rule_2.json").autoClosed(Json.parse) ::
+        Resource.my.getAsStream("lifecycle-rule_3.json").autoClosed(Json.parse) ::
+        Nil
+    } { verifyFormat[LifecycleRule] }
+
+    forAll(verifyFormat(_: LifecycleRule))
+  }
+
+  it must "serialize list buckets" in {
+    import ScalaCheckPropertyChecks._
+    import ScalacheckShapeless._
+
+    Inspectors.forAll {
+      Resource.my.getAsStream("list-buckets-request_0.json").autoClosed(Json.parse) ::
+        Nil
+    } { verifyFormat[ListBuckets] }
+
+    forAll(verifyFormat(_: ListBuckets))
+  }
+
+  it must "serialize bucket list" in {
+    import ScalaCheckPropertyChecks._
+    import ScalacheckShapeless._
+
+    Inspectors.forAll {
+      Resource.my.getAsStream("list-buckets-response_0.json").autoClosed(Json.parse) ::
+        Nil
+    } { verifyFormat[BucketList] }
+
+    forAll(verifyFormat(_: BucketList))
+  }
+
+  it must "serialize operation" in {
+    Inspectors.forAll(Operation.values) {
+      verifyFormat(_)
     }
-
-    "serialize CORS rule" in {
-      import ScalaCheckPropertyChecks._
-      import ScalacheckShapeless._
-
-      Inspectors.forAll {
-        Resource.my.getAsStream("cors-rules_0.json").autoClosed(Json.parse(_).as[Seq[JsValue]])
-      } { verifyFormat[CorsRule] }
-
-      forAll(verifyFormat(_: CorsRule))
-    }
-
-    "serialize lifecycle rule" in {
-      import ScalaCheckPropertyChecks._
-      import ScalacheckShapeless._
-
-      Inspectors.forAll {
-        Resource.my.getAsStream("lifecycle-rule_0.json").autoClosed(Json.parse) ::
-          Resource.my.getAsStream("lifecycle-rule_1.json").autoClosed(Json.parse) ::
-          Resource.my.getAsStream("lifecycle-rule_2.json").autoClosed(Json.parse) ::
-          Resource.my.getAsStream("lifecycle-rule_3.json").autoClosed(Json.parse) ::
-          Nil
-      } { verifyFormat[LifecycleRule] }
-
-      forAll(verifyFormat(_: LifecycleRule))
-    }
-
-    "serialize list buckets" in {
-      import ScalaCheckPropertyChecks._
-      import ScalacheckShapeless._
-
-      Inspectors.forAll {
-        Resource.my.getAsStream("list-buckets-request_0.json").autoClosed(Json.parse) ::
-          Nil
-      } { verifyFormat[ListBuckets] }
-
-      forAll(verifyFormat(_: ListBuckets))
-    }
-
-    "serialize bucket list" in {
-      import ScalaCheckPropertyChecks._
-      import ScalacheckShapeless._
-
-      Inspectors.forAll {
-        Resource.my.getAsStream("list-buckets-response_0.json").autoClosed(Json.parse) ::
-          Nil
-      } { verifyFormat[BucketList] }
-
-      forAll(verifyFormat(_: BucketList))
-    }
-
-    "serialize operation" in {
-      Inspectors.forAll(Operation.values) {
-        verifyFormat(_)
-      }
-    }
-
   }
 
 }

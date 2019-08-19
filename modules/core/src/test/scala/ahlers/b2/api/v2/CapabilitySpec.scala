@@ -11,7 +11,7 @@ class CapabilitySpec extends AnyFlatSpec {
 
   behavior of "Capability"
 
-  they must "match protocol literals" in {
+  it must "specify protocol literals" in {
     import Capability._
     Inspectors.forAll(Capability.values) { x =>
       val y = x.value

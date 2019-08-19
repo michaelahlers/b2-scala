@@ -11,7 +11,7 @@ class OperationSpec extends AnyFlatSpec {
 
   behavior of "Operation"
 
-  they must "match protocol literals" in {
+  it must "specify protocol literals" in {
     import Operation._
     Inspectors.forAll(Operation.values) { x =>
       val y = x.value
