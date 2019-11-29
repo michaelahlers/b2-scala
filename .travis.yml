@@ -19,10 +19,10 @@ matrix:
       jdk: openjdk8
 
 before_script:
-  - sbt '+compile;+test:compile;+it:compile'
+  - sbt +test:compile +it:compile
 
 script:
-  - sbt '+test'
+  - sbt +test
 
 cache:
   directories:
