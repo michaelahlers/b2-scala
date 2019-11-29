@@ -3,14 +3,13 @@ lazy val `b2` = (project in file("."))
   .aggregate(
     `akka-http`,
     `api`,
-    `play-json`,
-    `testkit`
+    `play-json`
   )
 
 lazy val `akka-http` = (project in file("modules") / "akka-http")
   .dependsOn(
     `api`,
-    `testkit` % Test
+    `api` % "test->test"
   )
 
 lazy val `api` = (project in file("modules") / "api")
@@ -20,12 +19,9 @@ lazy val `api` = (project in file("modules") / "api")
 lazy val `play-json` = (project in file("modules") / "play-json")
   .dependsOn(
     `api`,
-    `testkit` % Test
+    `api` % "test->test"
   )
 //.configs(IntegrationTest)
 //.settings(Defaults.itSettings)
-
-lazy val `testkit` = (project in file("modules") / "testkit")
-  .dependsOn(`api`)
 
 publish / skip := true
