@@ -19,7 +19,7 @@ install:
   - cmd: sbt version & exit 0
 
 build_script:
-  - sbt ";+compile;+test:compile;+it:compile"
+  - sbt "+compile;+test:compile;+it:compile"
 
 test_script:
   - sbt "+test"

@@ -18,6 +18,9 @@ matrix:
     - os: osx
       jdk: openjdk8
 
+before_script:
+  - sb "+compile;+test:compile;+it:compile"
+
 script:
   - sbt "+test"
 
