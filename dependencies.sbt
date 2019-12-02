@@ -13,13 +13,14 @@ ThisBuild / libraryDependencies ++=
     Nil
 
 ThisBuild / libraryDependencies ++=
-  "org.typelevel" %% "cats-laws" % "2.0.0-M4" % Test ::
+  "com.softwaremill.diffx" %% "diffx-scalatest" % "0.3.12" % Test ::
+    "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3" % Test ::
+    "org.typelevel" %% "cats-laws" % "2.0.0-M4" % Test ::
     "org.typelevel" %% "cats-testkit" % "2.0.0-M4" % Test ::
     "org.scalacheck" %% "scalacheck" % "1.14.0" % Test ::
     "org.scalamock" %% "scalamock" % "4.4.0" % Test ::
     "org.scalatest" %% "scalatest" % "3.0.8" % Test ::
     "org.scalatestplus" %% "scalatestplus-scalacheck" % "1.0.0-SNAP8" % Test ::
-    "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3" % Test ::
     Nil
 
 //ThisBuild / libraryDependencies ++=
