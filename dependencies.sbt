@@ -9,7 +9,7 @@ ThisBuild / crossScalaVersions ++=
 ThisBuild / libraryDependencies ++=
   "com.github.pathikrit" %% "better-files" % "3.8.0" ::
     "org.typelevel" %% "cats-core" % "2.0.0-M4" ::
-    "org.scalactic" %% "scalactic" % "3.0.8" ::
+    "org.scalactic" %% "scalactic" % "3.1.0" ::
     Nil
 
 ThisBuild / libraryDependencies ++=
