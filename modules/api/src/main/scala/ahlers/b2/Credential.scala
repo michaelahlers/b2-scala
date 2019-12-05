@@ -32,10 +32,12 @@ object Credential {
     }
 
     case class Environment(key: String, secret: String) extends Provider {
+      private[ahlers] def environment: Map[String, String] = sys.env
+
       override def find() =
         for {
-          k <- sys.env.get(key)
-          s <- sys.env.get(secret)
+          k <- environment.get(key)
+          s <- environment.get(secret)
         } yield Credential(k, s)
     }
 
