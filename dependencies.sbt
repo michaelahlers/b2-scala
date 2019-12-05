@@ -1,8 +1,5 @@
 ThisBuild / scalaVersion := "2.13.0"
-ThisBuild / crossScalaVersions ++=
-  "2.11.12" ::
-    "2.12.8" ::
-    Nil
+ThisBuild / crossScalaVersions += "2.12.8"
 
 /* TODO: Set Cats release version. */
 
