@@ -1,8 +1,5 @@
 ThisBuild / scalaVersion := "2.13.0"
-ThisBuild / crossScalaVersions ++=
-  "2.11.12" ::
-    "2.12.8" ::
-    Nil
+ThisBuild / crossScalaVersions += "2.12.8"
 
 /* TODO: Set Cats release version. */
 
@@ -17,7 +14,7 @@ ThisBuild / libraryDependencies ++=
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.3" % Test ::
     "org.typelevel" %% "cats-laws" % "2.0.0" % Test ::
     "org.typelevel" %% "cats-testkit" % "2.0.0" % Test ::
-    "org.scalacheck" %% "scalacheck" % "1.14.0" % Test ::
+    "org.scalacheck" %% "scalacheck" % "1.14.2" % Test ::
     "org.scalamock" %% "scalamock" % "4.4.0" % Test ::
     "org.scalatest" %% "scalatest" % "3.0.8" % Test ::
     "org.scalatestplus" %% "scalatestplus-scalacheck" % "1.0.0-SNAP8" % Test ::

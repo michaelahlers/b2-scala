@@ -6,7 +6,7 @@ os:
 
 jdk:
   - openjdk8
-  - openjdk11
+  - openjdk12
 
 matrix:
   # OpenJDK installation fails, even with older Xcode image. See https://github.com/travis-ci/travis-ci/issues/10289 for details.
