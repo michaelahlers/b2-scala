@@ -10,15 +10,13 @@ import org.scalatest.Matchers._
 import org.scalatest.enablers._
 import org.scalatest.wordspec._
 import org.scalatestplus.scalacheck._
-import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
 trait VerifyJsonEncoding { this: AnyWordSpecLike =>
-
-  import VerifyJsonEncoding._
 
   type Encoding[A] = VerifyJsonEncoding.Encoding[A]
 
@@ -26,6 +24,7 @@ trait VerifyJsonEncoding { this: AnyWordSpecLike =>
     "read and write account authorizations" in {
       import AccountAuthorization._
       import Capability._
+
       Encoding.read(Resource.my.getAsString("authorize-account-response_0.json")) should matchTo(
         AccountAuthorization(
           5000000,
@@ -40,40 +39,46 @@ trait VerifyJsonEncoding { this: AnyWordSpecLike =>
           "4_0022623512fc8f80000000001_0186e431_d18d02_acct_tH7VW03boebOXayIc43-sxptpfA=",
           "https://f002.backblazeb2.com",
           100000000
-        ))
+        )
+      )
 
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
+      import PartialFunction.fromFunction
+
       forAll { accountAuthorization: AccountAuthorization =>
         inside(Json.parse(Encoding.write(accountAuthorization))) {
-          import AccountAuthorization.Allowed
- PartialFunction.fromFunction(   ((__ \ "absoluteMinimumPartSize").read[Long] and
-            (__ \ "accountId").read[String] and
-            (__ \ "allowed").read(              ((__ \ "capabilities").read(Reads.seq(Reads[Capability] {
-                case JsString("deleteBuckets") => JsSuccess(DeleteBuckets)
-                case JsString("deleteFiles")   => JsSuccess(DeleteFiles)
-                case JsString("deleteKeys")    => JsSuccess(DeleteKeys)
-                case JsString("listBuckets")   => JsSuccess(ListBuckets)
-                case JsString("listFiles")     => JsSuccess(ListFiles)
-                case JsString("listKeys")      => JsSuccess(ListKeys)
-                case JsString("readFiles")     => JsSuccess(ReadFiles)
-                case JsString("shareFiles")    => JsSuccess(ShareFiles)
-                case JsString("writeBuckets")  => JsSuccess(WriteBuckets)
-                case JsString("writeFiles")    => JsSuccess(WriteFiles)
-                case JsString("writeKeys")     => JsSuccess(WriteKeys)
-                case capability                => JsError(s"""Unknown capability "$capability".""")
-              })) and
-                (__ \ "bucketId").readNullable[String] and
-                (__ \ "bucketName").readNullable[String] and
-                (__ \ "namePrefix").readNullable[String])
-                .apply(Allowed.apply _)) and
-            (__ \ "apiUrl").read[String] and
-            (__ \ "authorizationToken").read[String] and
-            (__ \ "downloadUrl").read[String] and
-            (__ \ "recommendedPartSize").read[Long])
-            .apply(AccountAuthorization.apply _)
-            .reads(_) should matchTo(JsSuccess(accountAuthorization): JsResult[AccountAuthorization]))
+          fromFunction(
+            ((__ \ "absoluteMinimumPartSize").read[Long] and
+              (__ \ "accountId").read[String] and
+              (__ \ "allowed").read(
+                ((__ \ "capabilities").read(Reads.seq(Reads[Capability] {
+                  case JsString("deleteBuckets") => JsSuccess(DeleteBuckets)
+                  case JsString("deleteFiles")   => JsSuccess(DeleteFiles)
+                  case JsString("deleteKeys")    => JsSuccess(DeleteKeys)
+                  case JsString("listBuckets")   => JsSuccess(ListBuckets)
+                  case JsString("listFiles")     => JsSuccess(ListFiles)
+                  case JsString("listKeys")      => JsSuccess(ListKeys)
+                  case JsString("readFiles")     => JsSuccess(ReadFiles)
+                  case JsString("shareFiles")    => JsSuccess(ShareFiles)
+                  case JsString("writeBuckets")  => JsSuccess(WriteBuckets)
+                  case JsString("writeFiles")    => JsSuccess(WriteFiles)
+                  case JsString("writeKeys")     => JsSuccess(WriteKeys)
+                  case capability                => JsError(s"""Unknown capability "$capability".""")
+                })) and
+                  (__ \ "bucketId").readNullable[String] and
+                  (__ \ "bucketName").readNullable[String] and
+                  (__ \ "namePrefix").readNullable[String])
+                  .apply(Allowed.apply _)
+              ) and
+              (__ \ "apiUrl").read[String] and
+              (__ \ "authorizationToken").read[String] and
+              (__ \ "downloadUrl").read[String] and
+              (__ \ "recommendedPartSize").read[Long])
+              .apply(AccountAuthorization.apply _)
+              .reads(_) should matchTo(JsSuccess(accountAuthorization): JsResult[AccountAuthorization])
+          )
         }
       }
     }
