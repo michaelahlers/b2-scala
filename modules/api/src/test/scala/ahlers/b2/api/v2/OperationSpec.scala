@@ -13,13 +13,13 @@ class OperationSpec extends AnyFlatSpec {
 
   it must "specify protocol literals" in {
     import Operation._
-    Inspectors.forAll(Operation.values) { x =>
-      val y = x.value
-      x match {
-        case DownloadFileByName => y should equal("b2_download_file_by_name")
-        case DownloadFileById   => y should equal("b2_download_file_by_id")
-        case UploadFile         => y should equal("b2_upload_file")
-        case UploadPart         => y should equal("b2_upload_part")
+    Inspectors.forAll(Operation.values) { operation =>
+      val value = operation.value
+      operation match {
+        case DownloadFileByName => value should equal("b2_download_file_by_name")
+        case DownloadFileById   => value should equal("b2_download_file_by_id")
+        case UploadFile         => value should equal("b2_upload_file")
+        case UploadPart         => value should equal("b2_upload_part")
       }
     }
   }

@@ -13,13 +13,13 @@ class BucketTypeSpec extends AnyFlatSpec {
 
   it must "specify protocol literals" in {
     import BucketType._
-    Inspectors.forAll(BucketType.values) { x =>
-      val y = x.value
-      x match {
-        case All        => y should equal("all")
-        case AllPrivate => y should equal("allPrivate")
-        case AllPublic  => y should equal("allPublic")
-        case Snapshot   => y should equal("snapshot")
+    Inspectors.forAll(BucketType.values) { bucketType =>
+      val value = bucketType.value
+      bucketType match {
+        case All        => value should equal("all")
+        case AllPrivate => value should equal("allPrivate")
+        case AllPublic  => value should equal("allPublic")
+        case Snapshot   => value should equal("snapshot")
       }
     }
   }

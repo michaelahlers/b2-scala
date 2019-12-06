@@ -13,20 +13,20 @@ class CapabilitySpec extends AnyFlatSpec {
 
   it must "specify protocol literals" in {
     import Capability._
-    Inspectors.forAll(Capability.values) { x =>
-      val y = x.value
-      x match {
-        case ListKeys      => y should equal("listKeys")
-        case WriteKeys     => y should equal("writeKeys")
-        case DeleteKeys    => y should equal("deleteKeys")
-        case ListBuckets   => y should equal("listBuckets")
-        case WriteBuckets  => y should equal("writeBuckets")
-        case DeleteBuckets => y should equal("deleteBuckets")
-        case ListFiles     => y should equal("listFiles")
-        case ReadFiles     => y should equal("readFiles")
-        case ShareFiles    => y should equal("shareFiles")
-        case WriteFiles    => y should equal("writeFiles")
-        case DeleteFiles   => y should equal("deleteFiles")
+    Inspectors.forAll(Capability.values) { capability =>
+      val value = capability.value
+      capability match {
+        case ListKeys      => value should equal("listKeys")
+        case WriteKeys     => value should equal("writeKeys")
+        case DeleteKeys    => value should equal("deleteKeys")
+        case ListBuckets   => value should equal("listBuckets")
+        case WriteBuckets  => value should equal("writeBuckets")
+        case DeleteBuckets => value should equal("deleteBuckets")
+        case ListFiles     => value should equal("listFiles")
+        case ReadFiles     => value should equal("readFiles")
+        case ShareFiles    => value should equal("shareFiles")
+        case WriteFiles    => value should equal("writeFiles")
+        case DeleteFiles   => value should equal("deleteFiles")
       }
     }
   }
