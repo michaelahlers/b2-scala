@@ -15,16 +15,20 @@ import play.api.libs.json._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-trait VerifyJsonEncoding { this: AnyWordSpecLike =>
+trait VerifyJsonEncoding[F[_]] {
+  this: AnyWordSpecLike =>
 
-  type Encoding[A] = VerifyJsonEncoding.Encoding[A]
+  import VerifyJsonEncoding._
 
-  def serializeAccountAuthorizations(implicit Encoding: Encoding[AccountAuthorization], pos: Position): Unit =
+  implicit def EncodingAccountAuthorization: Encoding[AccountAuthorization]
+
+  "Json Encodings" must {
+
     "read and write account authorizations" in {
       import AccountAuthorization._
       import Capability._
 
-      Encoding.read(Resource.my.getAsString("authorize-account-response_0.json")) should matchTo(
+      Encoding[AccountAuthorization].read(Resource.my.getAsString("authorize-account-response_0.json")) should matchTo(
         AccountAuthorization(
           5000000,
           "YOUR_ACCOUNT_ID",
@@ -72,10 +76,12 @@ trait VerifyJsonEncoding { this: AnyWordSpecLike =>
           (__ \ "downloadUrl").read[String] and
           (__ \ "recommendedPartSize").read[Long])
           .apply(AccountAuthorization.apply _)
-          .reads(Json.parse(Encoding.write(accountAuthorization)))
+          .reads(Json.parse(Encoding[AccountAuthorization].write(accountAuthorization)))
           .should(matchTo(JsSuccess(accountAuthorization): JsResult[AccountAuthorization]))
       }
     }
+
+  }
 
   //def serializeBucketTypes(implicit A: Encoding)
 
@@ -107,16 +113,13 @@ trait VerifyJsonEncoding { this: AnyWordSpecLike =>
 
 object VerifyJsonEncoding {
 
-  implicit def ContainingJsResult[A]: Containing[JsResult[A]] = new Containing[JsResult[A]] {
-    val delegate: Containing[Option[A]] = implicitly
-    override def contains(container: JsResult[A], element: Any) = delegate.contains(container.asOpt, element)
-    override def containsOneOf(container: JsResult[A], elements: collection.Seq[Any]) = delegate.containsOneOf(container.asOpt, elements)
-    override def containsNoneOf(container: JsResult[A], elements: collection.Seq[Any]) = delegate.containsNoneOf(container.asOpt, elements)
-  }
-
   trait Encoding[A] {
     def read: String => A
     def write: A => String
+  }
+
+  object Encoding {
+    def apply[A: Encoding]: Encoding[A] = implicitly[Encoding[A]]
   }
 
 }

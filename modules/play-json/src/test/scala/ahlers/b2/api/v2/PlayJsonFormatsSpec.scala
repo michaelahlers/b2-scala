@@ -1,6 +1,7 @@
 package ahlers.b2.api.v2
 
 import better.files._
+import cats.Functor
 import org.scalacheck._
 import org.scalactic._
 import org.scalactic.source._
@@ -16,31 +17,11 @@ import play.api.libs.json._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncoding {
+class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncoding[Format] {
 
   import PlayJsonFormats._
+  import PlayJsonFormatsSpec._
 
-  implicit object EncodingAccountAuthorization extends Encoding[AccountAuthorization] {
-    override val read = Json.parse(_).as[AccountAuthorization]
-    override val write = (Json.toJson(_: AccountAuthorization)) andThen Json.stringify
-  }
-
-  "Formats" must {
-    serializeAccountAuthorizations
-  }
-
-//it must "serialize bucket type" in {
-//  Inspectors.forAll(BucketType.values) {
-//    verifyFormat(_)
-//  }
-//}
-//
-//it must "serialize capability" in {
-//  Inspectors.forAll(Capability.values) {
-//    verifyFormat(_)
-//  }
-//}
-//
 //it must "serialize CORS rule" in {
 //  import ScalaCheckPropertyChecks._
 //  import ScalacheckShapeless._
@@ -97,42 +78,23 @@ class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncoding {
 //  }
 //}
 
+  implicit override def EncodingAccountAuthorization = FormatEncoding[AccountAuthorization]
+
 }
 
-//object PlayJsonFormatsSpec {
-//
-//  import Gen._
-//
-//  implicit object ContainingJsResult extends Containing[JsResult[_]] {
-//    val delegate: Containing[Option[_]] = implicitly
-//    override def contains(container: JsResult[_], element: Any) = delegate.contains(container.asOpt, element)
-//    override def containsOneOf(container: JsResult[_], elements: collection.Seq[Any]) = delegate.containsOneOf(container.asOpt, elements)
-//    override def containsNoneOf(container: JsResult[_], elements: collection.Seq[Any]) = delegate.containsNoneOf(container.asOpt, elements)
-//  }
-//
-//  val nullsRemoved: Uniformity[JsValue] = new Uniformity[JsValue] {
-//
-//    override def normalizedCanHandle(x: Any) = x.isInstanceOf[JsValue]
-//
-//    override def normalizedOrSame(x: Any) =
-//      x match {
-//        case y: JsValue => normalized(y)
-//        case _          => x
-//      }
-//
-//    override def normalized(x: JsValue) = x match {
-//      case JsObject(xs) =>
-//        JsObject {
-//          xs flatMap {
-//            case (_, JsNull) => None
-//            case (k, v)      => Some((k, normalized(v)))
-//          }
-//        }
-//      case x => x
-//    }
-//
-//  }
-//
+object PlayJsonFormatsSpec {
+
+  import VerifyJsonEncoding._
+
+  class FormatEncoding[A: Format] extends Encoding[A] {
+    override def read = Json.parse(_).as[A]
+    override def write = (Json.toJson(_: A)) andThen Json.stringify _
+  }
+
+  object FormatEncoding {
+    def apply[A: Format]: Encoding[A] = new FormatEncoding[A]
+  }
+
 //  case class Formatted[A](x: A, y: JsValue) {
 //    def withShape(f: (A, JsValue) => Assertion)(implicit pos: Position): Assertion = f(x, y)
 //    def withResult[B: Reads](f: (A, JsResult[B]) => Assertion)(implicit pos: Position): Assertion = f(x, y.validate[B])
@@ -156,5 +118,5 @@ class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncoding {
 //    }
 //
 //  }
-//
-//}
+
+}
