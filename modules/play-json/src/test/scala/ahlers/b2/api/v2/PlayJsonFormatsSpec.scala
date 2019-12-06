@@ -11,21 +11,6 @@ class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings {
   import PlayJsonFormats._
   import PlayJsonFormatsSpec._
 
-//it must "serialize lifecycle rule" in {
-//  import ScalaCheckPropertyChecks._
-//  import ScalacheckShapeless._
-//
-//  Inspectors.forAll {
-//    Resource.my.getAsStream("lifecycle-rule_0.json").autoClosed(Json.parse) ::
-//      Resource.my.getAsStream("lifecycle-rule_1.json").autoClosed(Json.parse) ::
-//      Resource.my.getAsStream("lifecycle-rule_2.json").autoClosed(Json.parse) ::
-//      Resource.my.getAsStream("lifecycle-rule_3.json").autoClosed(Json.parse) ::
-//      Nil
-//  } { verifyFormat[LifecycleRule] }
-//
-//  forAll(verifyFormat(_: LifecycleRule))
-//}
-//
 //it must "serialize list buckets" in {
 //  import ScalaCheckPropertyChecks._
 //  import ScalacheckShapeless._
@@ -58,6 +43,7 @@ class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings {
 
   implicit override def EncodingAccountAuthorization = FormatEncoding[AccountAuthorization]
   implicit override def EncodingCorsRule = FormatEncoding[CorsRule]
+  implicit override def EncodingLifecycleRule = FormatEncoding[LifecycleRule]
 
 }
 
