@@ -17,7 +17,7 @@ import play.api.libs.json._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncoding[Format] {
+class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings[Format] {
 
   import PlayJsonFormats._
   import PlayJsonFormatsSpec._
@@ -84,7 +84,7 @@ class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncoding[Format] {
 
 object PlayJsonFormatsSpec {
 
-  import VerifyJsonEncoding._
+  import VerifyJsonEncodings._
 
   class FormatEncoding[A: Format] extends Encoding[A] {
     override def read = Json.parse(_).as[A]

@@ -13,10 +13,10 @@ import play.api.libs.json._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-trait VerifyJsonEncoding[F[_]] {
+trait VerifyJsonEncodings[F[_]] {
   this: AnyWordSpecLike =>
 
-  import VerifyJsonEncoding._
+  import VerifyJsonEncodings._
 
   implicit def EncodingAccountAuthorization: Encoding[AccountAuthorization]
 
@@ -109,7 +109,7 @@ trait VerifyJsonEncoding[F[_]] {
 //
 //}
 
-object VerifyJsonEncoding {
+object VerifyJsonEncodings {
 
   trait Encoding[A] {
     def read: String => A
