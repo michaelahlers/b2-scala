@@ -5,7 +5,6 @@ import cats.syntax.option._
 import com.softwaremill.diffx.scalatest.DiffMatcher._
 import org.scalacheck._
 import org.scalactic.source._
-import org.scalatest.Inside._
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.enablers._
 import org.scalatest.wordspec._
@@ -45,41 +44,36 @@ trait VerifyJsonEncoding { this: AnyWordSpecLike =>
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
-      import PartialFunction.fromFunction
-
       forAll { accountAuthorization: AccountAuthorization =>
-        inside(Json.parse(Encoding.write(accountAuthorization))) {
-          fromFunction(
-            ((__ \ "absoluteMinimumPartSize").read[Long] and
-              (__ \ "accountId").read[String] and
-              (__ \ "allowed").read(
-                ((__ \ "capabilities").read(Reads.seq(Reads[Capability] {
-                  case JsString("deleteBuckets") => JsSuccess(DeleteBuckets)
-                  case JsString("deleteFiles")   => JsSuccess(DeleteFiles)
-                  case JsString("deleteKeys")    => JsSuccess(DeleteKeys)
-                  case JsString("listBuckets")   => JsSuccess(ListBuckets)
-                  case JsString("listFiles")     => JsSuccess(ListFiles)
-                  case JsString("listKeys")      => JsSuccess(ListKeys)
-                  case JsString("readFiles")     => JsSuccess(ReadFiles)
-                  case JsString("shareFiles")    => JsSuccess(ShareFiles)
-                  case JsString("writeBuckets")  => JsSuccess(WriteBuckets)
-                  case JsString("writeFiles")    => JsSuccess(WriteFiles)
-                  case JsString("writeKeys")     => JsSuccess(WriteKeys)
-                  case capability                => JsError(s"""Unknown capability "$capability".""")
-                })) and
-                  (__ \ "bucketId").readNullable[String] and
-                  (__ \ "bucketName").readNullable[String] and
-                  (__ \ "namePrefix").readNullable[String])
-                  .apply(Allowed.apply _)
-              ) and
-              (__ \ "apiUrl").read[String] and
-              (__ \ "authorizationToken").read[String] and
-              (__ \ "downloadUrl").read[String] and
-              (__ \ "recommendedPartSize").read[Long])
-              .apply(AccountAuthorization.apply _)
-              .reads(_) should matchTo(JsSuccess(accountAuthorization): JsResult[AccountAuthorization])
-          )
-        }
+        ((__ \ "absoluteMinimumPartSize").read[Long] and
+          (__ \ "accountId").read[String] and
+          (__ \ "allowed").read(
+            ((__ \ "capabilities").read(Reads.seq(Reads[Capability] {
+              case JsString("deleteBuckets") => JsSuccess(DeleteBuckets)
+              case JsString("deleteFiles")   => JsSuccess(DeleteFiles)
+              case JsString("deleteKeys")    => JsSuccess(DeleteKeys)
+              case JsString("listBuckets")   => JsSuccess(ListBuckets)
+              case JsString("listFiles")     => JsSuccess(ListFiles)
+              case JsString("listKeys")      => JsSuccess(ListKeys)
+              case JsString("readFiles")     => JsSuccess(ReadFiles)
+              case JsString("shareFiles")    => JsSuccess(ShareFiles)
+              case JsString("writeBuckets")  => JsSuccess(WriteBuckets)
+              case JsString("writeFiles")    => JsSuccess(WriteFiles)
+              case JsString("writeKeys")     => JsSuccess(WriteKeys)
+              case capability                => JsError(s"""Unknown capability "$capability".""")
+            })) and
+              (__ \ "bucketId").readNullable[String] and
+              (__ \ "bucketName").readNullable[String] and
+              (__ \ "namePrefix").readNullable[String])
+              .apply(Allowed.apply _)
+          ) and
+          (__ \ "apiUrl").read[String] and
+          (__ \ "authorizationToken").read[String] and
+          (__ \ "downloadUrl").read[String] and
+          (__ \ "recommendedPartSize").read[Long])
+          .apply(AccountAuthorization.apply _)
+          .reads(Json.parse(Encoding.write(accountAuthorization)))
+          .should(matchTo(JsSuccess(accountAuthorization): JsResult[AccountAuthorization]))
       }
     }
 
