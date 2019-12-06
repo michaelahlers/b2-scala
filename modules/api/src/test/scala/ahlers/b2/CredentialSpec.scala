@@ -4,7 +4,7 @@ import cats.syntax.option._
 import org.scalacheck._
 import org.scalamock.scalatest._
 import org.scalatest._
-import org.scalatest.Matchers._
+import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec._
 import org.scalatestplus.scalacheck._
 

@@ -6,7 +6,7 @@ import com.softwaremill.diffx.scalatest.DiffMatcher._
 import org.scalacheck._
 import org.scalactic.source._
 import org.scalatest.Inside._
-import org.scalatest.Matchers._
+import org.scalatest.matchers.should.Matchers._
 import org.scalatest.enablers._
 import org.scalatest.wordspec._
 import org.scalatestplus.scalacheck._
