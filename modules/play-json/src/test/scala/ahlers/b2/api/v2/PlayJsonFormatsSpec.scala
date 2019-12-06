@@ -1,38 +1,16 @@
 package ahlers.b2.api.v2
 
-import better.files._
-import cats.Functor
-import org.scalacheck._
-import org.scalactic._
-import org.scalactic.source._
-import org.scalatest.flatspec._
-import org.scalatest.Inside._
-import org.scalatest._
-import org.scalatest.matchers.should.Matchers._
-import org.scalatest.enablers._
 import org.scalatest.wordspec._
-import org.scalatestplus.scalacheck._
 import play.api.libs.json._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings[Format] {
+class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings {
 
   import PlayJsonFormats._
   import PlayJsonFormatsSpec._
 
-//it must "serialize CORS rule" in {
-//  import ScalaCheckPropertyChecks._
-//  import ScalacheckShapeless._
-//
-//  Inspectors.forAll {
-//    Resource.my.getAsStream("cors-rules_0.json").autoClosed(Json.parse(_).as[Seq[JsValue]])
-//  } { verifyFormat[CorsRule] }
-//
-//  forAll(verifyFormat(_: CorsRule))
-//}
-//
 //it must "serialize lifecycle rule" in {
 //  import ScalaCheckPropertyChecks._
 //  import ScalacheckShapeless._
@@ -79,6 +57,7 @@ class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings[Format] {
 //}
 
   implicit override def EncodingAccountAuthorization = FormatEncoding[AccountAuthorization]
+  implicit override def EncodingCorsRule = FormatEncoding[CorsRule]
 
 }
 
@@ -89,34 +68,11 @@ object PlayJsonFormatsSpec {
   class FormatEncoding[A: Format] extends Encoding[A] {
     override def read = Json.parse(_).as[A]
     override def write = (Json.toJson(_: A)) andThen Json.stringify _
+    override def iterable = FormatEncoding[Iterable[A]]
   }
 
   object FormatEncoding {
     def apply[A: Format]: Encoding[A] = new FormatEncoding[A]
   }
-
-//  case class Formatted[A](x: A, y: JsValue) {
-//    def withShape(f: (A, JsValue) => Assertion)(implicit pos: Position): Assertion = f(x, y)
-//    def withResult[B: Reads](f: (A, JsResult[B]) => Assertion)(implicit pos: Position): Assertion = f(x, y.validate[B])
-//  }
-//
-//  def verifyFormat[A: Format](x: A)(implicit pos: Position) = {
-//    import Json._
-//    inside(toJson(x)) {
-//      case y =>
-//        y.as[A] should equal(x)
-//        Formatted(x, toJson(x))
-//    }
-//  }
-//
-//  def verifyFormat[A: Format](y: JsValue)(implicit pos: Position) = {
-//    import Json._
-//    inside(y.validate[A]) {
-//      case JsSuccess(x, _) =>
-//        (toJson(x) should equal(y))(after being nullsRemoved)
-//        Formatted(x, y)
-//    }
-//
-//  }
 
 }

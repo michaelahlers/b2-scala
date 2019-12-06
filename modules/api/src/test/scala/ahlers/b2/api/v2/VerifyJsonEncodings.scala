@@ -4,6 +4,7 @@ import better.files._
 import cats.syntax.option._
 import com.softwaremill.diffx.scalatest.DiffMatcher._
 import org.scalacheck._
+import org.scalatest.LoneElement._
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec._
 import org.scalatestplus.scalacheck._
@@ -13,20 +14,22 @@ import play.api.libs.json._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-trait VerifyJsonEncodings[F[_]] {
+trait VerifyJsonEncodings {
   this: AnyWordSpecLike =>
 
-  import VerifyJsonEncodings._
+  type Encoding[A] = VerifyJsonEncodings.Encoding[A]
+  val Encoding = VerifyJsonEncodings.Encoding
 
   implicit def EncodingAccountAuthorization: Encoding[AccountAuthorization]
+  implicit def EncodingCorsRule: Encoding[CorsRule]
 
-  "Json Encodings" must {
+  "JSON Encodings" must {
 
     "read and write account authorizations" in {
       import AccountAuthorization._
       import Capability._
 
-      Encoding[AccountAuthorization].read(Resource.my.getAsString("authorize-account-response_0.json")) should matchTo(
+      Encoding[AccountAuthorization].read(Resource.my.getAsString("authorize-account-response_0.json")) should matchTo {
         AccountAuthorization(
           5000000,
           "YOUR_ACCOUNT_ID",
@@ -41,7 +44,7 @@ trait VerifyJsonEncodings[F[_]] {
           "https://f002.backblazeb2.com",
           100000000
         )
-      )
+      }
 
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
@@ -75,8 +78,47 @@ trait VerifyJsonEncodings[F[_]] {
           (__ \ "recommendedPartSize").read[Long])
           .apply(AccountAuthorization.apply _)
           .reads(Json.parse(Encoding[AccountAuthorization].write(accountAuthorization)))
-          .should(matchTo(JsSuccess(accountAuthorization): JsResult[AccountAuthorization]))
+          .get
+          .should(matchTo(accountAuthorization))
       }
+    }
+
+    "read and write CORS rules" in {
+      import Operation._
+
+      Encoding[CorsRule].iterable.read(Resource.my.getAsString("cors-rules_0.json")).loneElement should matchTo {
+        CorsRule(
+          "downloadFromAnyOrigin",
+          Seq("https"),
+          Seq(DownloadFileById, DownloadFileByName),
+          Seq("range").some,
+          Seq("x-bz-content-sha1").some,
+          3600
+        )
+      }
+
+      import ScalaCheckPropertyChecks._
+      import ScalacheckShapeless._
+
+      forAll { corsRule: CorsRule =>
+        ((__ \ "corsRuleName").read[String] and
+          (__ \ "allowedOrigins").read[Seq[String]] and
+          (__ \ "allowedOperations").read(Reads.seq(Reads[Operation] {
+            case JsString("b2_download_file_by_name") => JsSuccess(DownloadFileByName)
+            case JsString("b2_download_file_by_id")   => JsSuccess(DownloadFileById)
+            case JsString("b2_upload_file")           => JsSuccess(UploadFile)
+            case JsString("b2_upload_part")           => JsSuccess(UploadPart)
+            case operation                            => JsError(s"""Unknown operation "$operation".""")
+          })) and
+          (__ \ "allowedHeaders").readNullable[Seq[String]] and
+          (__ \ "exposeHeaders").readNullable[Seq[String]] and
+          (__ \ "maxAgeSeconds").read[Int])
+          .apply(CorsRule.apply _)
+          .reads(Json.parse(Encoding[CorsRule].write(corsRule)))
+          .get
+          .should(matchTo(corsRule))
+      }
+
     }
 
   }
@@ -114,6 +156,7 @@ object VerifyJsonEncodings {
   trait Encoding[A] {
     def read: String => A
     def write: A => String
+    def iterable: Encoding[Iterable[A]]
   }
 
   object Encoding {
