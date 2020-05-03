@@ -9,17 +9,17 @@ import org.scalatest.matchers.should.Matchers._
  */
 class BucketTypeSpec extends AnyFlatSpec {
 
-  behavior of "Bucket Type"
+  behavior.of("Bucket Type")
 
   it must "specify protocol literals" in {
     import BucketType._
     Inspectors.forAll(BucketType.values) { bucketType =>
       val value = bucketType.value
       bucketType match {
-        case All        => value should equal("all")
+        case All => value should equal("all")
         case AllPrivate => value should equal("allPrivate")
-        case AllPublic  => value should equal("allPublic")
-        case Snapshot   => value should equal("snapshot")
+        case AllPublic => value should equal("allPublic")
+        case Snapshot => value should equal("snapshot")
       }
     }
   }

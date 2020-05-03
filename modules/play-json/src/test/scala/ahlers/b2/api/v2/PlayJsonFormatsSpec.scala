@@ -53,7 +53,7 @@ object PlayJsonFormatsSpec {
 
   class FormatEncoding[A: Format] extends Encoding[A] {
     override def read = Json.parse(_).as[A]
-    override def write = (Json.toJson(_: A)) andThen Json.stringify _
+    override def write = (Json.toJson(_: A)).andThen(Json.stringify _)
     override def iterable = FormatEncoding[Iterable[A]]
   }
 

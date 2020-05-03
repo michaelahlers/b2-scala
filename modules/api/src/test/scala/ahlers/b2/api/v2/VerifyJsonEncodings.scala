@@ -29,11 +29,11 @@ trait VerifyJsonEncodings {
     implicit val ReadsBucketType = {
       import BucketType._
       Reads[BucketType] {
-        case JsString("all")        => JsSuccess(All)
+        case JsString("all") => JsSuccess(All)
         case JsString("allPrivate") => JsSuccess(AllPrivate)
-        case JsString("allPublic")  => JsSuccess(AllPublic)
-        case JsString("snapshot")   => JsSuccess(Snapshot)
-        case bucketType             => JsError(s"""Unknown bucket type "$bucketType".""")
+        case JsString("allPublic") => JsSuccess(AllPublic)
+        case JsString("snapshot") => JsSuccess(Snapshot)
+        case bucketType => JsError(s"""Unknown bucket type "$bucketType".""")
       }
     }
 
@@ -41,17 +41,17 @@ trait VerifyJsonEncodings {
       import Capability._
       Reads[Capability] {
         case JsString("deleteBuckets") => JsSuccess(DeleteBuckets)
-        case JsString("deleteFiles")   => JsSuccess(DeleteFiles)
-        case JsString("deleteKeys")    => JsSuccess(DeleteKeys)
-        case JsString("listBuckets")   => JsSuccess(ListBuckets)
-        case JsString("listFiles")     => JsSuccess(ListFiles)
-        case JsString("listKeys")      => JsSuccess(ListKeys)
-        case JsString("readFiles")     => JsSuccess(ReadFiles)
-        case JsString("shareFiles")    => JsSuccess(ShareFiles)
-        case JsString("writeBuckets")  => JsSuccess(WriteBuckets)
-        case JsString("writeFiles")    => JsSuccess(WriteFiles)
-        case JsString("writeKeys")     => JsSuccess(WriteKeys)
-        case capability                => JsError(s"""Unknown capability "$capability".""")
+        case JsString("deleteFiles") => JsSuccess(DeleteFiles)
+        case JsString("deleteKeys") => JsSuccess(DeleteKeys)
+        case JsString("listBuckets") => JsSuccess(ListBuckets)
+        case JsString("listFiles") => JsSuccess(ListFiles)
+        case JsString("listKeys") => JsSuccess(ListKeys)
+        case JsString("readFiles") => JsSuccess(ReadFiles)
+        case JsString("shareFiles") => JsSuccess(ShareFiles)
+        case JsString("writeBuckets") => JsSuccess(WriteBuckets)
+        case JsString("writeFiles") => JsSuccess(WriteFiles)
+        case JsString("writeKeys") => JsSuccess(WriteKeys)
+        case capability => JsError(s"""Unknown capability "$capability".""")
       }
     }
 
@@ -59,10 +59,10 @@ trait VerifyJsonEncodings {
       import Operation._
       Reads[Operation] {
         case JsString("b2_download_file_by_name") => JsSuccess(DownloadFileByName)
-        case JsString("b2_download_file_by_id")   => JsSuccess(DownloadFileById)
-        case JsString("b2_upload_file")           => JsSuccess(UploadFile)
-        case JsString("b2_upload_part")           => JsSuccess(UploadPart)
-        case operation                            => JsError(s"""Unknown operation "$operation".""")
+        case JsString("b2_download_file_by_id") => JsSuccess(DownloadFileById)
+        case JsString("b2_upload_file") => JsSuccess(UploadFile)
+        case JsString("b2_upload_part") => JsSuccess(UploadPart)
+        case operation => JsError(s"""Unknown operation "$operation".""")
       }
     }
 
@@ -91,19 +91,22 @@ trait VerifyJsonEncodings {
       import ScalacheckShapeless._
 
       forAll { accountAuthorization: AccountAuthorization =>
-        ((__ \ "absoluteMinimumPartSize").read[Long] and
-          (__ \ "accountId").read[String] and
-          (__ \ "allowed").read(
-            ((__ \ "capabilities").read[Seq[Capability]] and
-              (__ \ "bucketId").readNullable[String] and
-              (__ \ "bucketName").readNullable[String] and
-              (__ \ "namePrefix").readNullable[String])
-              .apply(Allowed.apply _)
-          ) and
-          (__ \ "apiUrl").read[String] and
-          (__ \ "authorizationToken").read[String] and
-          (__ \ "downloadUrl").read[String] and
-          (__ \ "recommendedPartSize").read[Long])
+        (__ \ "absoluteMinimumPartSize")
+          .read[Long]
+          .and((__ \ "accountId").read[String])
+          .and(
+            (__ \ "allowed").read(
+              (__ \ "capabilities")
+                .read[Seq[Capability]]
+                .and((__ \ "bucketId").readNullable[String])
+                .and((__ \ "bucketName").readNullable[String])
+                .and((__ \ "namePrefix").readNullable[String])
+                .apply(Allowed.apply _)
+            ))
+          .and((__ \ "apiUrl").read[String])
+          .and((__ \ "authorizationToken").read[String])
+          .and((__ \ "downloadUrl").read[String])
+          .and((__ \ "recommendedPartSize").read[Long])
           .apply(AccountAuthorization.apply _)
           .reads(Json.parse(Encoding[AccountAuthorization].write(accountAuthorization)))
           .get
@@ -129,12 +132,13 @@ trait VerifyJsonEncodings {
       import ScalacheckShapeless._
 
       forAll { corsRule: CorsRule =>
-        ((__ \ "corsRuleName").read[String] and
-          (__ \ "allowedOrigins").read[Seq[String]] and
-          (__ \ "allowedOperations").read[Seq[Operation]] and
-          (__ \ "allowedHeaders").readNullable[Seq[String]] and
-          (__ \ "exposeHeaders").readNullable[Seq[String]] and
-          (__ \ "maxAgeSeconds").read[Int])
+        (__ \ "corsRuleName")
+          .read[String]
+          .and((__ \ "allowedOrigins").read[Seq[String]])
+          .and((__ \ "allowedOperations").read[Seq[Operation]])
+          .and((__ \ "allowedHeaders").readNullable[Seq[String]])
+          .and((__ \ "exposeHeaders").readNullable[Seq[String]])
+          .and((__ \ "maxAgeSeconds").read[Int])
           .apply(CorsRule.apply _)
           .reads(Json.parse(Encoding[CorsRule].write(corsRule)))
           .get
@@ -180,9 +184,10 @@ trait VerifyJsonEncodings {
       import ScalacheckShapeless._
 
       forAll { lifecycleRule: LifecycleRule =>
-        ((__ \ "daysFromHidingToDeleting").readNullable[Int] and
-          (__ \ "daysFromUploadingToHiding").readNullable[Int] and
-          (__ \ "fileNamePrefix").read[String])
+        (__ \ "daysFromHidingToDeleting")
+          .readNullable[Int]
+          .and((__ \ "daysFromUploadingToHiding").readNullable[Int])
+          .and((__ \ "fileNamePrefix").read[String])
           .apply(LifecycleRule.apply _)
           .reads(Json.parse(Encoding[LifecycleRule].write(lifecycleRule)))
           .get

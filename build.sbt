@@ -25,3 +25,5 @@ lazy val `play-json` = (project in file("modules") / "play-json")
 //.settings(Defaults.itSettings)
 
 publish / skip := true
+
+ThisBuild / scalafmtOnCompile := true

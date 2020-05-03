@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers._
  */
 class OperationSpec extends AnyFlatSpec {
 
-  behavior of "Operation"
+  behavior.of("Operation")
 
   it must "specify protocol literals" in {
     import Operation._
@@ -17,9 +17,9 @@ class OperationSpec extends AnyFlatSpec {
       val value = operation.value
       operation match {
         case DownloadFileByName => value should equal("b2_download_file_by_name")
-        case DownloadFileById   => value should equal("b2_download_file_by_id")
-        case UploadFile         => value should equal("b2_upload_file")
-        case UploadPart         => value should equal("b2_upload_part")
+        case DownloadFileById => value should equal("b2_download_file_by_id")
+        case UploadFile => value should equal("b2_upload_file")
+        case UploadPart => value should equal("b2_upload_part")
       }
     }
   }

@@ -5,12 +5,10 @@ package ahlers.b2.api.v2
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
 case class ListBuckets(
-    accountId: String,
-    bucketId: Option[String],
-    bucketName: Option[String],
-    bucketTypes: Option[Seq[BucketType]]
-)
+  accountId: String,
+  bucketId: Option[String],
+  bucketName: Option[String],
+  bucketTypes: Option[Seq[BucketType]])
 
 case class BucketList(
-    buckets: Seq[Bucket]
-)
+  buckets: Seq[Bucket])
