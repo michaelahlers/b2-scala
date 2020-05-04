@@ -6,12 +6,12 @@ Scala libraries for [Backblaze B2][backblaze-b2-overview].
 
 | | macOS | Linux | Windows |
 | --- | --- | --- | --- |
-| 1.8 | ❔ | :heavy_check_mark: | :heavy_check_mark: | 
-| 9 | ❔ | ❔ | ❔ | 
-| 11 | ❔ | ❔ | ❔ | 
-| 12 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| 13 | ❔ | ❔ | ❔ | 
-| 14 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| 1.8 | :grey_question: | :white_check_mark: | :white_check_mark: | 
+| 9 | :grey_question: | :grey_question: | :grey_question: | 
+| 11 | :grey_question: | :grey_question: | :grey_question: | 
+| 12 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| 13 | :grey_question: | :grey_question: | :grey_question: | 
+| 14 | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 [appveyor-build]: https://ci.appveyor.com/project/michaelahlers/b2-scala
 [appveyor-status-badge]: https://ci.appveyor.com/api/projects/status/9lflbg9hhbrhsidl/branch/v0.0.x?svg=true
