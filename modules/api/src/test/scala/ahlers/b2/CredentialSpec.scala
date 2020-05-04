@@ -58,7 +58,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
       import ScalacheckShapeless._
 
       forAll { (heads: Int, credential: Credential, tails: Int) =>
-        val providers = Seq.fill(heads)(mock[Provider])
+        val providers = Seq.fill(heads + 1 + tails)(mock[Provider])
 
         providers
           .take(heads)
