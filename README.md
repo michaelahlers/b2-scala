@@ -2,7 +2,9 @@
 
 Scala libraries for [Backblaze B2][backblaze-b2-overview].
 
-## Tested Platforms
+## Platforms
+
+This library and tools are fully-tested on and supported for these Java versions and operating systems:
 
 | JDK | macOS | Linux | Windows |
 | ---: | :---: | :---: | :---: |
