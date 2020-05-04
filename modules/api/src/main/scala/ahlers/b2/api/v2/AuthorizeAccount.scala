@@ -5,25 +5,23 @@ import ahlers.b2.api.v2.AccountAuthorization._
 /**
  * @see [[https://www.backblaze.com/b2/docs/b2_authorize_account.html]]
  */
-case class AuthorizeAccount(
-  applicationKeyId: String,
-  applicationKey: String)
+case class AuthorizeAccount(applicationKeyId: ApplicationKeyId, applicationKey: ApplicationKey)
 
 case class AccountAuthorization(
-  absoluteMinimumPartSize: Long,
-  accountId: String,
+  absoluteMinimumPartSize: PartSize,
+  accountId: AccountId,
   allowed: Allowed,
-  apiUrl: String,
-  authorizationToken: String,
-  downloadUrl: String,
-  recommendedPartSize: Long)
+  apiUrl: Url,
+  authorizationToken: AuthorizationToken,
+  downloadUrl: Url,
+  recommendedPartSize: PartSize)
 
 object AccountAuthorization {
 
   case class Allowed(
     capabilities: Seq[Capability],
-    bucketId: Option[String],
-    bucketName: Option[String],
-    namePrefix: Option[String])
+    bucketId: Option[BucketId],
+    bucketName: Option[BucketName],
+    namePrefix: Option[BucketNamePrefix])
 
 }

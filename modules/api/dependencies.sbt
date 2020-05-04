@@ -1,11 +1,14 @@
 libraryDependencies ++=
   "com.beachape" %% "enumeratum" % "1.5.13" ::
+    "eu.timepit" %% "refined" % "0.9.14" ::
     "io.estatico" %% "newtype" % "0.4.3" ::
     "io.scalaland" %% "chimney" % "0.5.1" ::
     Nil
 
 libraryDependencies ++=
   "com.typesafe.play" %% "play-json" % "2.7.4" % Test ::
+    "eu.timepit" %% "refined-scalacheck" % "0.9.14" % Test ::
+    "eu.timepit" %% "refined-shapeless" % "0.9.14" % Test ::
     Nil
 
 libraryDependencies ++= {

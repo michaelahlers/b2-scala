@@ -3,6 +3,9 @@ package ahlers.b2.api.v2
 import better.files._
 import cats.syntax.option._
 import com.softwaremill.diffx.scalatest.DiffMatcher._
+import eu.timepit.refined.api._
+import eu.timepit.refined.scalacheck.all._
+import eu.timepit.refined.auto._
 import org.scalacheck._
 import org.scalatest.LoneElement._
 import org.scalatest.matchers.should.Matchers._
@@ -25,6 +28,17 @@ trait VerifyJsonEncodings {
   implicit def EncodingLifecycleRule: Encoding[LifecycleRule]
 
   "JSON Encodings" must {
+
+    implicit def ReadsRefined[T, P, F[_, _]](implicit T: Reads[T], F: RefType[F], TP: Validate[T, P]): Reads[F[T, P]] =
+      T.flatMap(F.refine(_).fold(Reads.failed(_), Reads.pure(_)))
+
+    implicit val ReadsAccountId: Reads[AccountId] = AccountId.deriving
+
+    implicit val ReadsAuthorizationToken: Reads[AuthorizationToken] = AuthorizationToken.deriving
+
+    implicit val ReadsBucketId: Reads[BucketId] = BucketId.deriving
+    implicit val ReadsBucketName: Reads[BucketName] = BucketName.deriving
+    implicit val ReadsBucketNamePrefix: Reads[BucketNamePrefix] = BucketNamePrefix.deriving
 
     implicit val ReadsBucketType = {
       import BucketType._
@@ -66,24 +80,39 @@ trait VerifyJsonEncodings {
       }
     }
 
+    implicit val ReadsPartSize: Reads[PartSize] = PartSize.deriving
+
+    implicit val ReadsUrl: Reads[Url] = Url.deriving
+
+    implicit val arbAccountId: Arbitrary[AccountId] = AccountId.deriving
+    implicit val arbAuthorizationToken: Arbitrary[AuthorizationToken] = AuthorizationToken.deriving
+
+    implicit val arbBucketId: Arbitrary[BucketId] = BucketId.deriving
+    implicit val arbBucketName: Arbitrary[BucketName] = BucketName.deriving
+    implicit val arbBucketNamePrefix: Arbitrary[BucketNamePrefix] = BucketNamePrefix.deriving
+
+    implicit val arbPartSize: Arbitrary[PartSize] = PartSize.deriving
+
+    implicit val arbUrl: Arbitrary[Url] = Url.deriving
+
     "read and write account authorizations" in {
       import AccountAuthorization._
       import Capability._
 
       Encoding[AccountAuthorization].read(Resource.my.getAsString("authorize-account-response_0.json")) should matchTo {
         AccountAuthorization(
-          5000000,
-          "YOUR_ACCOUNT_ID",
+          PartSize(5000000),
+          AccountId("YOUR_ACCOUNT_ID"),
           Allowed(
             Seq(ListBuckets, ListFiles, ReadFiles, ShareFiles, WriteFiles, DeleteFiles),
-            "BUCKET_ID".some,
-            "BUCKET_NAME".some,
+            BucketId("BUCKET_ID").some,
+            BucketName("BUCKET_NAME").some,
             none
           ),
-          "https://apiNNN.backblazeb2.com",
-          "4_0022623512fc8f80000000001_0186e431_d18d02_acct_tH7VW03boebOXayIc43-sxptpfA=",
-          "https://f002.backblazeb2.com",
-          100000000
+          Url("https://apiNNN.backblazeb2.com"),
+          AuthorizationToken("4_0022623512fc8f80000000001_0186e431_d18d02_acct_tH7VW03boebOXayIc43-sxptpfA="),
+          Url("https://f002.backblazeb2.com"),
+          PartSize(100000000)
         )
       }
 
@@ -92,21 +121,21 @@ trait VerifyJsonEncodings {
 
       forAll { accountAuthorization: AccountAuthorization =>
         (__ \ "absoluteMinimumPartSize")
-          .read[Long]
-          .and((__ \ "accountId").read[String])
+          .read[PartSize]
+          .and((__ \ "accountId").read[AccountId])
           .and(
             (__ \ "allowed").read(
               (__ \ "capabilities")
                 .read[Seq[Capability]]
-                .and((__ \ "bucketId").readNullable[String])
-                .and((__ \ "bucketName").readNullable[String])
-                .and((__ \ "namePrefix").readNullable[String])
+                .and((__ \ "bucketId").readNullable[BucketId])
+                .and((__ \ "bucketName").readNullable[BucketName])
+                .and((__ \ "namePrefix").readNullable[BucketNamePrefix])
                 .apply(Allowed.apply _)
             ))
-          .and((__ \ "apiUrl").read[String])
-          .and((__ \ "authorizationToken").read[String])
-          .and((__ \ "downloadUrl").read[String])
-          .and((__ \ "recommendedPartSize").read[Long])
+          .and((__ \ "apiUrl").read[Url])
+          .and((__ \ "authorizationToken").read[AuthorizationToken])
+          .and((__ \ "downloadUrl").read[Url])
+          .and((__ \ "recommendedPartSize").read[PartSize])
           .apply(AccountAuthorization.apply _)
           .reads(Json.parse(Encoding[AccountAuthorization].write(accountAuthorization)))
           .get
