@@ -1,14 +1,14 @@
 package ahlers.b2
 
 import cats.syntax.option._
+import com.softwaremill.diffx.scalatest.DiffMatcher._
 import org.scalacheck._
 import org.scalamock.scalatest._
+import org.scalatest.OptionValues._
 import org.scalatest._
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec._
 import org.scalatestplus.scalacheck._
-import OptionValues._
-import com.softwaremill.diffx.scalatest.DiffMatcher._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
@@ -57,7 +57,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
-      forAll { (heads: Int, credential: Credential, tails: Int) =>
+      forAll(choose(0, 3), arbitrary[Credential], choose(0, 3)) { (heads, credential, tails) =>
         val providers = Seq.fill(heads + 1 + tails)(mock[Provider])
 
         providers
@@ -75,7 +75,7 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
             (p.find _)
               .expects()
               .once()
-              .returns(none))
+              .returns(credential.some))
 
         providers
           .drop(heads)
@@ -97,8 +97,8 @@ class CredentialSpec extends AnyWordSpec with MockFactory {
   "Provider environment" must {
     "default to system" in {
       import Credential._
-      import Provider._
       import Inside._
+      import Provider._
 
       inside(Provider.environment("", "")) {
         case provider: Environment =>

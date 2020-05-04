@@ -1,6 +1,8 @@
 package ahlers.b2
 
 import cats.data._
+import cats.instances.option._
+import cats.syntax.apply._
 import cats.syntax.foldable._
 import cats.syntax.option._
 
@@ -33,12 +35,9 @@ object Credential {
 
     case class Environment(key: String, secret: String) extends Provider {
       private[ahlers] def environment: Map[String, String] = sys.env
-
       override def find() =
-        for {
-          k <- environment.get(key)
-          s <- environment.get(secret)
-        } yield Credential(k, s)
+        (environment.get(key), environment.get(secret))
+          .mapN(Credential(_, _))
     }
 
     case class Chain(providers: NonEmptyList[Provider]) extends Provider {

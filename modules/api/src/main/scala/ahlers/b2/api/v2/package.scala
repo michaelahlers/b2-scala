@@ -1,6 +1,8 @@
 package ahlers.b2.api
 
 import eu.timepit.refined.api._
+import eu.timepit.refined.auto._
+import eu.timepit.refined.boolean._
 import eu.timepit.refined.collection._
 import eu.timepit.refined.numeric._
 import io.estatico.newtype.macros.newtype

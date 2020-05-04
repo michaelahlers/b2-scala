@@ -1,7 +1,4 @@
-/**
- * Need not be so strict with tests.
- */
-Test / scalacOptions --=
+scalacOptions --=
   "-Wunused:implicits" ::
     "-Wunused:imports" ::
     "-Wunused:locals" ::
