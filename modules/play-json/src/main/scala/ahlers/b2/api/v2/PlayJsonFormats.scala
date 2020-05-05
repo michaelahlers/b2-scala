@@ -32,7 +32,9 @@ trait PlayJsonFormats {
 
   implicit val FormatPartSize: Format[PartSize] = PartSize.deriving
 
-  implicit val FormatUrl: Format[Url] = Url.deriving
+  implicit val FormatApiUrl: Format[ApiUrl] = ApiUrl.deriving
+
+  implicit val FormatDownloadUrl: Format[DownloadUrl] = DownloadUrl.deriving
 
   implicit val FormatAccountAuthorization: Format[AccountAuthorization] = {
     import AccountAuthorization._

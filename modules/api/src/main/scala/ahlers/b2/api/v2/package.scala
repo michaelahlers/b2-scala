@@ -1,10 +1,7 @@
 package ahlers.b2.api
 
 import eu.timepit.refined.api._
-import eu.timepit.refined.auto._
-import eu.timepit.refined.boolean._
-import eu.timepit.refined.collection._
-import eu.timepit.refined.numeric._
+import eu.timepit.refined._
 import io.estatico.newtype.macros.newtype
 
 /**
@@ -13,40 +10,44 @@ import io.estatico.newtype.macros.newtype
  */
 package object v2 {
 
-  type AccountIdRules = NonEmpty
+  type AccountIdRules = collection.NonEmpty
   type AccountIdType = String Refined AccountIdRules
   @newtype case class AccountId(toText: AccountIdType)
 
-  type ApplicationKeyRules = NonEmpty
+  type ApplicationKeyRules = collection.NonEmpty
   type ApplicationKeyType = String Refined ApplicationKeyRules
   @newtype case class ApplicationKey(toText: ApplicationKeyType)
 
-  type ApplicationKeyIdRules = NonEmpty
+  type ApplicationKeyIdRules = collection.NonEmpty
   type ApplicationKeyIdType = String Refined ApplicationKeyIdRules
   @newtype case class ApplicationKeyId(toText: ApplicationKeyIdType)
 
-  type AuthorizationTokenRules = NonEmpty
+  type AuthorizationTokenRules = collection.NonEmpty
   type AuthorizationTokenType = String Refined AuthorizationTokenRules
   @newtype case class AuthorizationToken(toText: AuthorizationTokenType)
 
-  type BucketIdRules = NonEmpty
+  type BucketIdRules = collection.NonEmpty
   type BucketIdType = String Refined BucketIdRules
   @newtype case class BucketId(toText: BucketIdType)
 
-  type BucketNameRules = NonEmpty
+  type BucketNameRules = collection.NonEmpty
   type BucketNameType = String Refined BucketNameRules
   @newtype case class BucketName(toText: BucketNameType)
 
-  type BucketNamePrefixRules = NonEmpty
+  type BucketNamePrefixRules = collection.NonEmpty
   type BucketNamePrefixType = String Refined BucketNamePrefixRules
   @newtype case class BucketNamePrefix(toText: BucketNamePrefixType)
 
-  type PartSizeRules = NonNegative
+  type PartSizeRules = numeric.NonNegative
   type PartSizeType = Int Refined PartSizeRules
   @newtype case class PartSize(toInt: PartSizeType)
 
-  type UrlRules = NonEmpty
-  type UrlType = String Refined UrlRules
-  @newtype case class Url(toText: UrlType)
+  type ApiUrlRules = collection.NonEmpty // string.Url
+  type ApiUrlType = String Refined ApiUrlRules
+  @newtype case class ApiUrl(toText: ApiUrlType)
+
+  type DownloadUrlRules = collection.NonEmpty // string.Url
+  type DownloadUrlType = String Refined DownloadUrlRules
+  @newtype case class DownloadUrl(toText: DownloadUrlType)
 
 }

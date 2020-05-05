@@ -11,9 +11,9 @@ case class AccountAuthorization(
   absoluteMinimumPartSize: PartSize,
   accountId: AccountId,
   allowed: Allowed,
-  apiUrl: Url,
+  apiUrl: ApiUrl,
   authorizationToken: AuthorizationToken,
-  downloadUrl: Url,
+  downloadUrl: DownloadUrl,
   recommendedPartSize: PartSize)
 
 object AccountAuthorization {

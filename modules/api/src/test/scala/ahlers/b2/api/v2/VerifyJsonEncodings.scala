@@ -4,7 +4,6 @@ import better.files._
 import cats.syntax.option._
 import com.softwaremill.diffx.scalatest.DiffMatcher._
 import eu.timepit.refined.api._
-import eu.timepit.refined.scalacheck.all._
 import eu.timepit.refined.auto._
 import org.scalacheck._
 import org.scalatest.LoneElement._
@@ -13,6 +12,7 @@ import org.scalatest.wordspec._
 import org.scalatestplus.scalacheck._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import ahlers.b2.api.v2.ScalaCheckArbitraryInstances._
 
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
@@ -82,18 +82,8 @@ trait VerifyJsonEncodings {
 
     implicit val ReadsPartSize: Reads[PartSize] = PartSize.deriving
 
-    implicit val ReadsUrl: Reads[Url] = Url.deriving
-
-    implicit val arbAccountId: Arbitrary[AccountId] = AccountId.deriving
-    implicit val arbAuthorizationToken: Arbitrary[AuthorizationToken] = AuthorizationToken.deriving
-
-    implicit val arbBucketId: Arbitrary[BucketId] = BucketId.deriving
-    implicit val arbBucketName: Arbitrary[BucketName] = BucketName.deriving
-    implicit val arbBucketNamePrefix: Arbitrary[BucketNamePrefix] = BucketNamePrefix.deriving
-
-    implicit val arbPartSize: Arbitrary[PartSize] = PartSize.deriving
-
-    implicit val arbUrl: Arbitrary[Url] = Url.deriving
+    implicit val ReadsApiUrl: Reads[ApiUrl] = ApiUrl.deriving
+    implicit val ReadsDownloadUrl: Reads[DownloadUrl] = DownloadUrl.deriving
 
     "read and write account authorizations" in {
       import AccountAuthorization._
@@ -109,9 +99,9 @@ trait VerifyJsonEncodings {
             BucketName("BUCKET_NAME").some,
             none
           ),
-          Url("https://apiNNN.backblazeb2.com"),
+          ApiUrl("https://apiNNN.backblazeb2.com"),
           AuthorizationToken("4_0022623512fc8f80000000001_0186e431_d18d02_acct_tH7VW03boebOXayIc43-sxptpfA="),
-          Url("https://f002.backblazeb2.com"),
+          DownloadUrl("https://f002.backblazeb2.com"),
           PartSize(100000000)
         )
       }
@@ -132,9 +122,9 @@ trait VerifyJsonEncodings {
                 .and((__ \ "namePrefix").readNullable[BucketNamePrefix])
                 .apply(Allowed.apply _)
             ))
-          .and((__ \ "apiUrl").read[Url])
+          .and((__ \ "apiUrl").read[ApiUrl])
           .and((__ \ "authorizationToken").read[AuthorizationToken])
-          .and((__ \ "downloadUrl").read[Url])
+          .and((__ \ "downloadUrl").read[DownloadUrl])
           .and((__ \ "recommendedPartSize").read[PartSize])
           .apply(AccountAuthorization.apply _)
           .reads(Json.parse(Encoding[AccountAuthorization].write(accountAuthorization)))
