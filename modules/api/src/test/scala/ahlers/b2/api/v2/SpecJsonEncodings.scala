@@ -1,5 +1,6 @@
 package ahlers.b2.api.v2
 
+import ahlers.b2.api.v2.ScalaCheckArbitraryInstances._
 import better.files._
 import cats.syntax.option._
 import com.softwaremill.diffx.scalatest.DiffMatcher._
@@ -13,9 +14,9 @@ import org.scalatest.wordspec._
 import org.scalatestplus.scalacheck._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import ahlers.b2.api.v2.ScalaCheckArbitraryInstances._
 
 /**
+ * Standard tests against JSON encodings, checking compliance against version 2 of the B2 API.
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
 trait SpecJsonEncodings {
