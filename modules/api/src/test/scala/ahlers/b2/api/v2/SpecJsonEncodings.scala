@@ -5,6 +5,7 @@ import cats.syntax.option._
 import com.softwaremill.diffx.scalatest.DiffMatcher._
 import eu.timepit.refined.api._
 import eu.timepit.refined.auto._
+import eu.timepit.refined._
 import org.scalacheck._
 import org.scalatest.LoneElement._
 import org.scalatest.matchers.should.Matchers._
@@ -32,13 +33,13 @@ trait SpecJsonEncodings {
     implicit def ReadsRefined[T, P, F[_, _]](implicit T: Reads[T], F: RefType[F], TP: Validate[T, P]): Reads[F[T, P]] =
       T.flatMap(F.refine(_).fold(Reads.failed(_), Reads.pure(_)))
 
-    implicit val ReadsAccountId: Reads[AccountId] = Reads.of[String Refined AccountIdRules].map(AccountId(_))
+    implicit val ReadsAccountId: Reads[AccountId] = Reads.of[String Refined collection.NonEmpty].map(AccountId(_))
 
-    implicit val ReadsAuthorizationToken: Reads[AuthorizationToken] = Reads.of[String Refined AuthorizationTokenRules].map(AuthorizationToken(_))
+    implicit val ReadsAuthorizationToken: Reads[AuthorizationToken] = Reads.of[String Refined collection.NonEmpty].map(AuthorizationToken(_))
 
-    implicit val ReadsBucketId: Reads[BucketId] = Reads.of[String Refined BucketIdRules].map(BucketId(_))
-    implicit val ReadsBucketName: Reads[BucketName] = Reads.of[String Refined BucketNameRules].map(BucketName(_))
-    implicit val ReadsBucketNamePrefix: Reads[BucketNamePrefix] = Reads.of[String Refined BucketNamePrefixRules].map(BucketNamePrefix(_))
+    implicit val ReadsBucketId: Reads[BucketId] = Reads.of[String Refined collection.NonEmpty].map(BucketId(_))
+    implicit val ReadsBucketName: Reads[BucketName] = Reads.of[String Refined collection.NonEmpty].map(BucketName(_))
+    implicit val ReadsBucketNamePrefix: Reads[BucketNamePrefix] = Reads.of[String Refined collection.NonEmpty].map(BucketNamePrefix(_))
 
     implicit val ReadsBucketType: Reads[BucketType] = {
       import BucketType._
@@ -80,10 +81,10 @@ trait SpecJsonEncodings {
       }
     }
 
-    implicit val ReadsPartSize: Reads[PartSize] = Reads.of[Int Refined PartSizeRules].map(PartSize(_))
+    implicit val ReadsPartSize: Reads[PartSize] = Reads.of[Int Refined numeric.NonNegative].map(PartSize(_))
 
-    implicit val ReadsApiUrl: Reads[ApiUrl] = Reads.of[String Refined ApiUrlRules].map(ApiUrl(_))
-    implicit val ReadsDownloadUrl: Reads[DownloadUrl] = Reads.of[String Refined DownloadUrlRules].map(DownloadUrl(_))
+    implicit val ReadsApiUrl: Reads[ApiUrl] = Reads.of[String Refined collection.NonEmpty].map(ApiUrl(_))
+    implicit val ReadsDownloadUrl: Reads[DownloadUrl] = Reads.of[String Refined collection.NonEmpty].map(DownloadUrl(_))
 
     "read and write account authorizations" in {
       import AccountAuthorization._
@@ -136,11 +137,11 @@ trait SpecJsonEncodings {
     "read and write CORS rules" in {
       import Operation._
 
-      implicit val ReadsCorsRuleName: Reads[CorsRuleName] = Reads.of[String Refined CorsRuleNameRules].map(CorsRuleName(_))
-      implicit val ReadsAllowedOrigin: Reads[AllowedOrigin] = Reads.of[String Refined AllowedOriginRules].map(AllowedOrigin(_))
-      implicit val ReadsAllowedHeader: Reads[AllowedHeader] = Reads.of[String Refined AllowedHeaderRules].map(AllowedHeader(_))
-      implicit val ReadsExposeHeader: Reads[ExposeHeader] = Reads.of[String Refined ExposeHeaderRules].map(ExposeHeader(_))
-      implicit val ReadsMaxAgeSeconds: Reads[MaxAgeSeconds] = Reads.of[Int Refined MaxAgeSecondsRules].map(MaxAgeSeconds(_))
+      implicit val ReadsCorsRuleName: Reads[CorsRuleName] = Reads.of[String Refined collection.NonEmpty].map(CorsRuleName(_))
+      implicit val ReadsAllowedOrigin: Reads[AllowedOrigin] = Reads.of[String Refined collection.NonEmpty].map(AllowedOrigin(_))
+      implicit val ReadsAllowedHeader: Reads[AllowedHeader] = Reads.of[String Refined collection.NonEmpty].map(AllowedHeader(_))
+      implicit val ReadsExposeHeader: Reads[ExposeHeader] = Reads.of[String Refined collection.NonEmpty].map(ExposeHeader(_))
+      implicit val ReadsMaxAgeSeconds: Reads[MaxAgeSeconds] = Reads.of[Int Refined numeric.NonNegative].map(MaxAgeSeconds(_))
 
       Encoding[CorsRule].iterable
         .read(Resource.my.getAsString("cors-rules_0.json"))
@@ -174,8 +175,8 @@ trait SpecJsonEncodings {
     }
 
     "read and write lifecycle rules" in {
-      implicit val ReadsDaysFromHidingToDeleting: Reads[DaysFromHidingToDeleting] = Reads.of[Int Refined DaysFromHidingToDeletingRules].map(DaysFromHidingToDeleting(_))
-      implicit val ReadsDaysFromUploadingToDeleting: Reads[DaysFromUploadingToDeleting] = Reads.of[Int Refined DaysFromUploadingToDeletingRules].map(DaysFromUploadingToDeleting(_))
+      implicit val ReadsDaysFromHidingToDeleting: Reads[DaysFromHidingToDeleting] = Reads.of[Int Refined numeric.NonNegative].map(DaysFromHidingToDeleting(_))
+      implicit val ReadsDaysFromUploadingToDeleting: Reads[DaysFromUploadingToDeleting] = Reads.of[Int Refined numeric.NonNegative].map(DaysFromUploadingToDeleting(_))
       implicit val ReadsFileNamePrefix: Reads[FileNamePrefix] = Reads.of[String].map(FileNamePrefix(_))
 
       Encoding[LifecycleRule]
