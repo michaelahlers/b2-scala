@@ -50,4 +50,28 @@ package object v2 {
   type DownloadUrlType = String Refined DownloadUrlRules
   @newtype case class DownloadUrl(toText: DownloadUrlType)
 
+  type BucketRevisionRules = numeric.NonNegative
+  type BucketRevisionType = Int Refined BucketRevisionRules
+  @newtype case class BucketRevision(toInt: BucketRevisionType)
+
+  type CorsRuleNameRules = collection.NonEmpty
+  type CorsRuleNameType = String Refined CorsRuleNameRules
+  @newtype case class CorsRuleName(toText: CorsRuleNameType)
+
+  type AllowedOriginRules = collection.NonEmpty // string.Url
+  type AllowedOriginType = String Refined AllowedOriginRules
+  @newtype case class AllowedOrigin(toText: AllowedOriginType)
+
+  type AllowedHeaderRules = collection.NonEmpty
+  type AllowedHeaderType = String Refined AllowedHeaderRules
+  @newtype case class AllowedHeader(toText: AllowedHeaderType)
+
+  type ExposeHeaderRules = collection.NonEmpty
+  type ExposeHeaderType = String Refined ExposeHeaderRules
+  @newtype case class ExposeHeader(toText: ExposeHeaderType)
+
+  type MaxAgeSecondsRules = numeric.NonNegative
+  type MaxAgeSecondsType = Int Refined MaxAgeSecondsRules
+  @newtype case class MaxAgeSeconds(toInt: MaxAgeSecondsType)
+
 }

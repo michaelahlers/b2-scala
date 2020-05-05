@@ -1,8 +1,8 @@
 package ahlers.b2.api.v2
 
-import org.scalacheck._
 import eu.timepit.refined.scalacheck.numeric._
 import eu.timepit.refined.scalacheck.string._
+import org.scalacheck._
 
 object ScalaCheckArbitraryInstances {
 
@@ -17,5 +17,11 @@ object ScalaCheckArbitraryInstances {
 
   implicit val arbApiUrl: Arbitrary[ApiUrl] = ApiUrl.deriving
   implicit val arbDownloadUrl: Arbitrary[DownloadUrl] = DownloadUrl.deriving
+
+  implicit val arbCorsRuleName: Arbitrary[CorsRuleName] = CorsRuleName.deriving
+  implicit val arbAllowedOrigin: Arbitrary[AllowedOrigin] = AllowedOrigin.deriving
+  implicit val arbAllowedHeader: Arbitrary[AllowedHeader] = AllowedHeader.deriving
+  implicit val arbExposeHeader: Arbitrary[ExposeHeader] = ExposeHeader.deriving
+  implicit val arbMaxAgeSeconds: Arbitrary[MaxAgeSeconds] = MaxAgeSeconds.deriving
 
 }

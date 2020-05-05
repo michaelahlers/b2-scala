@@ -89,8 +89,9 @@ trait VerifyJsonEncodings {
       import AccountAuthorization._
       import Capability._
 
-      Encoding[AccountAuthorization].read(Resource.my.getAsString("authorize-account-response_0.json")) should matchTo {
-        AccountAuthorization(
+      Encoding[AccountAuthorization]
+        .read(Resource.my.getAsString("authorize-account-response_0.json"))
+        .should(matchTo(AccountAuthorization(
           PartSize(5000000),
           AccountId("YOUR_ACCOUNT_ID"),
           Allowed(
@@ -103,8 +104,7 @@ trait VerifyJsonEncodings {
           AuthorizationToken("4_0022623512fc8f80000000001_0186e431_d18d02_acct_tH7VW03boebOXayIc43-sxptpfA="),
           DownloadUrl("https://f002.backblazeb2.com"),
           PartSize(100000000)
-        )
-      }
+        )))
 
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
@@ -136,28 +136,35 @@ trait VerifyJsonEncodings {
     "read and write CORS rules" in {
       import Operation._
 
-      Encoding[CorsRule].iterable.read(Resource.my.getAsString("cors-rules_0.json")).loneElement should matchTo {
-        CorsRule(
-          "downloadFromAnyOrigin",
-          Seq("https"),
+      implicit val ReadsCorsRuleName: Reads[CorsRuleName] = CorsRuleName.deriving
+      implicit val ReadsAllowedOrigin: Reads[AllowedOrigin] = AllowedOrigin.deriving
+      implicit val ReadsAllowedHeader: Reads[AllowedHeader] = AllowedHeader.deriving
+      implicit val ReadsExposeHeader: Reads[ExposeHeader] = ExposeHeader.deriving
+      implicit val ReadsMaxAgeSeconds: Reads[MaxAgeSeconds] = MaxAgeSeconds.deriving
+
+      Encoding[CorsRule].iterable
+        .read(Resource.my.getAsString("cors-rules_0.json"))
+        .loneElement
+        .should(matchTo(CorsRule(
+          CorsRuleName("downloadFromAnyOrigin"),
+          Seq(AllowedOrigin("https")),
           Seq(DownloadFileById, DownloadFileByName),
-          Seq("range").some,
-          Seq("x-bz-content-sha1").some,
-          3600
-        )
-      }
+          Seq(AllowedHeader("range")).some,
+          Seq(ExposeHeader("x-bz-content-sha1")).some,
+          MaxAgeSeconds(3600)
+        )))
 
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
 
       forAll { corsRule: CorsRule =>
         (__ \ "corsRuleName")
-          .read[String]
-          .and((__ \ "allowedOrigins").read[Seq[String]])
+          .read[CorsRuleName]
+          .and((__ \ "allowedOrigins").read[Seq[AllowedOrigin]])
           .and((__ \ "allowedOperations").read[Seq[Operation]])
-          .and((__ \ "allowedHeaders").readNullable[Seq[String]])
-          .and((__ \ "exposeHeaders").readNullable[Seq[String]])
-          .and((__ \ "maxAgeSeconds").read[Int])
+          .and((__ \ "allowedHeaders").readNullable[Seq[AllowedHeader]])
+          .and((__ \ "exposeHeaders").readNullable[Seq[ExposeHeader]])
+          .and((__ \ "maxAgeSeconds").read[MaxAgeSeconds])
           .apply(CorsRule.apply _)
           .reads(Json.parse(Encoding[CorsRule].write(corsRule)))
           .get
@@ -167,37 +174,45 @@ trait VerifyJsonEncodings {
     }
 
     "read and write lifecycle rules" in {
-      Encoding[LifecycleRule].read(Resource.my.getAsString("lifecycle-rule_0.json")) should matchTo {
-        LifecycleRule(
-          30.some,
-          none,
-          "backup/"
-        )
-      }
+      Encoding[LifecycleRule]
+        .read(Resource.my.getAsString("lifecycle-rule_0.json"))
+        .should(
+          matchTo(
+            LifecycleRule(
+              30.some,
+              none,
+              "backup/"
+            )))
 
-      Encoding[LifecycleRule].read(Resource.my.getAsString("lifecycle-rule_1.json")) should matchTo {
-        LifecycleRule(
-          1.some,
-          7.some,
-          "logs/"
-        )
-      }
+      Encoding[LifecycleRule]
+        .read(Resource.my.getAsString("lifecycle-rule_1.json"))
+        .should(
+          matchTo(
+            LifecycleRule(
+              1.some,
+              7.some,
+              "logs/"
+            )))
 
-      Encoding[LifecycleRule].read(Resource.my.getAsString("lifecycle-rule_2.json")) should matchTo {
-        LifecycleRule(
-          1.some,
-          none,
-          ""
-        )
-      }
+      Encoding[LifecycleRule]
+        .read(Resource.my.getAsString("lifecycle-rule_2.json"))
+        .should(
+          matchTo(
+            LifecycleRule(
+              1.some,
+              none,
+              ""
+            )))
 
-      Encoding[LifecycleRule].read(Resource.my.getAsString("lifecycle-rule_3.json")) should matchTo {
-        LifecycleRule(
-          30.some,
-          none,
-          ""
-        )
-      }
+      Encoding[LifecycleRule]
+        .read(Resource.my.getAsString("lifecycle-rule_3.json"))
+        .should(
+          matchTo(
+            LifecycleRule(
+              30.some,
+              none,
+              ""
+            )))
 
       import ScalaCheckPropertyChecks._
       import ScalacheckShapeless._
@@ -218,30 +233,6 @@ trait VerifyJsonEncodings {
   }
 
 }
-
-//case class Formatted[A](x: A, y: JsValue) {
-//  def withShape(f: (A, JsValue) => Assertion)(implicit pos: Position): Assertion = f(x, y)
-//  def withResult[B: Reads](f: (A, JsResult[B]) => Assertion)(implicit pos: Position): Assertion = f(x, y.validate[B])
-//}
-//
-//def verifyFormat[A: Format](x: A)(implicit pos: Position) = {
-//  import Json._
-//  inside(toJson(x)) {
-//    case y =>
-//      y.as[A] should equal(x)
-//      Formatted(x, toJson(x))
-//  }
-//}
-
-//def verifyFormat[A: Format](y: JsValue)(implicit pos: Position) = {
-//  import Json._
-//  inside(y.validate[A]) {
-//    case JsSuccess(x, _) =>
-//      (toJson(x) should equal(y))(after being nullsRemoved)
-//      Formatted(x, y)
-//  }
-//
-//}
 
 object VerifyJsonEncodings {
 

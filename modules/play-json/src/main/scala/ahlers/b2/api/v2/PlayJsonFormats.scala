@@ -36,6 +36,14 @@ trait PlayJsonFormats {
 
   implicit val FormatDownloadUrl: Format[DownloadUrl] = DownloadUrl.deriving
 
+  implicit val FormatBucketRevision: Format[BucketRevision] = BucketRevision.deriving
+
+  implicit val FormatCorsRuleName: Format[CorsRuleName] = CorsRuleName.deriving
+  implicit val FormatAllowedOrigin: Format[AllowedOrigin] = AllowedOrigin.deriving
+  implicit val FormatAllowedHeader: Format[AllowedHeader] = AllowedHeader.deriving
+  implicit val FormatExposeHeader: Format[ExposeHeader] = ExposeHeader.deriving
+  implicit val FormatMaxAgeSeconds: Format[MaxAgeSeconds] = MaxAgeSeconds.deriving
+
   implicit val FormatAccountAuthorization: Format[AccountAuthorization] = {
     import AccountAuthorization._
     implicit val FormatAllowed: Format[Allowed] = Json.format
