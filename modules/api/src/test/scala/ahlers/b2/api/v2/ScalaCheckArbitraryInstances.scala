@@ -24,4 +24,8 @@ object ScalaCheckArbitraryInstances {
   implicit val arbExposeHeader: Arbitrary[ExposeHeader] = ExposeHeader.deriving
   implicit val arbMaxAgeSeconds: Arbitrary[MaxAgeSeconds] = MaxAgeSeconds.deriving
 
+  implicit val arbDaysFromHidingToDeleting: Arbitrary[DaysFromHidingToDeleting] = DaysFromHidingToDeleting.deriving
+  implicit val arbDaysFromUploadingToDeleting: Arbitrary[DaysFromUploadingToDeleting] = DaysFromUploadingToDeleting.deriving
+  implicit val arbFileNamePrefix: Arbitrary[FileNamePrefix] = FileNamePrefix.deriving
+
 }

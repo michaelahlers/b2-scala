@@ -44,6 +44,10 @@ trait PlayJsonFormats {
   implicit val FormatExposeHeader: Format[ExposeHeader] = ExposeHeader.deriving
   implicit val FormatMaxAgeSeconds: Format[MaxAgeSeconds] = MaxAgeSeconds.deriving
 
+  implicit val FormatDaysFromHidingToDeleting: Format[DaysFromHidingToDeleting] = DaysFromHidingToDeleting.deriving
+  implicit val FormatDaysFromUploadingToDeleting: Format[DaysFromUploadingToDeleting] = DaysFromUploadingToDeleting.deriving
+  implicit val FormatFileNamePrefix: Format[FileNamePrefix] = FileNamePrefix.deriving
+
   implicit val FormatAccountAuthorization: Format[AccountAuthorization] = {
     import AccountAuthorization._
     implicit val FormatAllowed: Format[Allowed] = Json.format

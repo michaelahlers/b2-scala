@@ -174,14 +174,18 @@ trait VerifyJsonEncodings {
     }
 
     "read and write lifecycle rules" in {
+      implicit val ReadsDaysFromHidingToDeleting: Reads[DaysFromHidingToDeleting] = DaysFromHidingToDeleting.deriving
+      implicit val ReadsDaysFromUploadingToDeleting: Reads[DaysFromUploadingToDeleting] = DaysFromUploadingToDeleting.deriving
+      implicit val ReadsFileNamePrefix: Reads[FileNamePrefix] = FileNamePrefix.deriving
+
       Encoding[LifecycleRule]
         .read(Resource.my.getAsString("lifecycle-rule_0.json"))
         .should(
           matchTo(
             LifecycleRule(
-              30.some,
+              DaysFromHidingToDeleting(30).some,
               none,
-              "backup/"
+              FileNamePrefix("backup/")
             )))
 
       Encoding[LifecycleRule]
@@ -189,9 +193,9 @@ trait VerifyJsonEncodings {
         .should(
           matchTo(
             LifecycleRule(
-              1.some,
-              7.some,
-              "logs/"
+              DaysFromHidingToDeleting(1).some,
+              DaysFromUploadingToDeleting(7).some,
+              FileNamePrefix("logs/")
             )))
 
       Encoding[LifecycleRule]
@@ -199,9 +203,9 @@ trait VerifyJsonEncodings {
         .should(
           matchTo(
             LifecycleRule(
-              1.some,
+              DaysFromHidingToDeleting(1).some,
               none,
-              ""
+              FileNamePrefix("")
             )))
 
       Encoding[LifecycleRule]
@@ -209,9 +213,9 @@ trait VerifyJsonEncodings {
         .should(
           matchTo(
             LifecycleRule(
-              30.some,
+              DaysFromHidingToDeleting(30).some,
               none,
-              ""
+              FileNamePrefix("")
             )))
 
       import ScalaCheckPropertyChecks._
@@ -219,9 +223,9 @@ trait VerifyJsonEncodings {
 
       forAll { lifecycleRule: LifecycleRule =>
         (__ \ "daysFromHidingToDeleting")
-          .readNullable[Int]
-          .and((__ \ "daysFromUploadingToHiding").readNullable[Int])
-          .and((__ \ "fileNamePrefix").read[String])
+          .readNullable[DaysFromHidingToDeleting]
+          .and((__ \ "daysFromUploadingToHiding").readNullable[DaysFromUploadingToDeleting])
+          .and((__ \ "fileNamePrefix").read[FileNamePrefix])
           .apply(LifecycleRule.apply _)
           .reads(Json.parse(Encoding[LifecycleRule].write(lifecycleRule)))
           .get

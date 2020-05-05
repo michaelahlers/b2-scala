@@ -74,4 +74,16 @@ package object v2 {
   type MaxAgeSecondsType = Int Refined MaxAgeSecondsRules
   @newtype case class MaxAgeSeconds(toInt: MaxAgeSecondsType)
 
+  type DaysFromHidingToDeletingRules = numeric.NonNegative
+  type DaysFromHidingToDeletingType = Int Refined DaysFromHidingToDeletingRules
+  @newtype case class DaysFromHidingToDeleting(toInt: DaysFromHidingToDeletingType)
+
+  type DaysFromUploadingToDeletingRules = numeric.NonNegative
+  type DaysFromUploadingToDeletingType = Int Refined DaysFromUploadingToDeletingRules
+  @newtype case class DaysFromUploadingToDeleting(toInt: DaysFromUploadingToDeletingType)
+
+  //type FileNamePrefixRules =
+  type FileNamePrefixType = String //Refined FileNamePrefixRules
+  @newtype case class FileNamePrefix(toText: FileNamePrefixType)
+
 }
