@@ -17,11 +17,11 @@ import ahlers.b2.api.v2.ScalaCheckArbitraryInstances._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-trait VerifyJsonEncodings {
+trait SpecJsonEncodings {
   this: AnyWordSpecLike =>
 
-  type Encoding[A] = VerifyJsonEncodings.Encoding[A]
-  val Encoding = VerifyJsonEncodings.Encoding
+  type Encoding[A] = SpecJsonEncodings.Encoding[A]
+  val Encoding = SpecJsonEncodings.Encoding
 
   implicit def EncodingAccountAuthorization: Encoding[AccountAuthorization]
   implicit def EncodingCorsRule: Encoding[CorsRule]
@@ -32,15 +32,15 @@ trait VerifyJsonEncodings {
     implicit def ReadsRefined[T, P, F[_, _]](implicit T: Reads[T], F: RefType[F], TP: Validate[T, P]): Reads[F[T, P]] =
       T.flatMap(F.refine(_).fold(Reads.failed(_), Reads.pure(_)))
 
-    implicit val ReadsAccountId: Reads[AccountId] = AccountId.deriving
+    implicit val ReadsAccountId: Reads[AccountId] = Reads.of[String Refined AccountIdRules].map(AccountId(_))
 
-    implicit val ReadsAuthorizationToken: Reads[AuthorizationToken] = AuthorizationToken.deriving
+    implicit val ReadsAuthorizationToken: Reads[AuthorizationToken] = Reads.of[String Refined AuthorizationTokenRules].map(AuthorizationToken(_))
 
-    implicit val ReadsBucketId: Reads[BucketId] = BucketId.deriving
-    implicit val ReadsBucketName: Reads[BucketName] = BucketName.deriving
-    implicit val ReadsBucketNamePrefix: Reads[BucketNamePrefix] = BucketNamePrefix.deriving
+    implicit val ReadsBucketId: Reads[BucketId] = Reads.of[String Refined BucketIdRules].map(BucketId(_))
+    implicit val ReadsBucketName: Reads[BucketName] = Reads.of[String Refined BucketNameRules].map(BucketName(_))
+    implicit val ReadsBucketNamePrefix: Reads[BucketNamePrefix] = Reads.of[String Refined BucketNamePrefixRules].map(BucketNamePrefix(_))
 
-    implicit val ReadsBucketType = {
+    implicit val ReadsBucketType: Reads[BucketType] = {
       import BucketType._
       Reads[BucketType] {
         case JsString("all") => JsSuccess(All)
@@ -51,7 +51,7 @@ trait VerifyJsonEncodings {
       }
     }
 
-    implicit val ReadsCapability = {
+    implicit val ReadsCapability: Reads[Capability] = {
       import Capability._
       Reads[Capability] {
         case JsString("deleteBuckets") => JsSuccess(DeleteBuckets)
@@ -69,7 +69,7 @@ trait VerifyJsonEncodings {
       }
     }
 
-    implicit val ReadsOperation = {
+    implicit val ReadsOperation: Reads[Operation] = {
       import Operation._
       Reads[Operation] {
         case JsString("b2_download_file_by_name") => JsSuccess(DownloadFileByName)
@@ -80,10 +80,10 @@ trait VerifyJsonEncodings {
       }
     }
 
-    implicit val ReadsPartSize: Reads[PartSize] = PartSize.deriving
+    implicit val ReadsPartSize: Reads[PartSize] = Reads.of[Int Refined PartSizeRules].map(PartSize(_))
 
-    implicit val ReadsApiUrl: Reads[ApiUrl] = ApiUrl.deriving
-    implicit val ReadsDownloadUrl: Reads[DownloadUrl] = DownloadUrl.deriving
+    implicit val ReadsApiUrl: Reads[ApiUrl] = Reads.of[String Refined ApiUrlRules].map(ApiUrl(_))
+    implicit val ReadsDownloadUrl: Reads[DownloadUrl] = Reads.of[String Refined DownloadUrlRules].map(DownloadUrl(_))
 
     "read and write account authorizations" in {
       import AccountAuthorization._
@@ -136,11 +136,11 @@ trait VerifyJsonEncodings {
     "read and write CORS rules" in {
       import Operation._
 
-      implicit val ReadsCorsRuleName: Reads[CorsRuleName] = CorsRuleName.deriving
-      implicit val ReadsAllowedOrigin: Reads[AllowedOrigin] = AllowedOrigin.deriving
-      implicit val ReadsAllowedHeader: Reads[AllowedHeader] = AllowedHeader.deriving
-      implicit val ReadsExposeHeader: Reads[ExposeHeader] = ExposeHeader.deriving
-      implicit val ReadsMaxAgeSeconds: Reads[MaxAgeSeconds] = MaxAgeSeconds.deriving
+      implicit val ReadsCorsRuleName: Reads[CorsRuleName] = Reads.of[String Refined CorsRuleNameRules].map(CorsRuleName(_))
+      implicit val ReadsAllowedOrigin: Reads[AllowedOrigin] = Reads.of[String Refined AllowedOriginRules].map(AllowedOrigin(_))
+      implicit val ReadsAllowedHeader: Reads[AllowedHeader] = Reads.of[String Refined AllowedHeaderRules].map(AllowedHeader(_))
+      implicit val ReadsExposeHeader: Reads[ExposeHeader] = Reads.of[String Refined ExposeHeaderRules].map(ExposeHeader(_))
+      implicit val ReadsMaxAgeSeconds: Reads[MaxAgeSeconds] = Reads.of[Int Refined MaxAgeSecondsRules].map(MaxAgeSeconds(_))
 
       Encoding[CorsRule].iterable
         .read(Resource.my.getAsString("cors-rules_0.json"))
@@ -174,9 +174,9 @@ trait VerifyJsonEncodings {
     }
 
     "read and write lifecycle rules" in {
-      implicit val ReadsDaysFromHidingToDeleting: Reads[DaysFromHidingToDeleting] = DaysFromHidingToDeleting.deriving
-      implicit val ReadsDaysFromUploadingToDeleting: Reads[DaysFromUploadingToDeleting] = DaysFromUploadingToDeleting.deriving
-      implicit val ReadsFileNamePrefix: Reads[FileNamePrefix] = FileNamePrefix.deriving
+      implicit val ReadsDaysFromHidingToDeleting: Reads[DaysFromHidingToDeleting] = Reads.of[Int Refined DaysFromHidingToDeletingRules].map(DaysFromHidingToDeleting(_))
+      implicit val ReadsDaysFromUploadingToDeleting: Reads[DaysFromUploadingToDeleting] = Reads.of[Int Refined DaysFromUploadingToDeletingRules].map(DaysFromUploadingToDeleting(_))
+      implicit val ReadsFileNamePrefix: Reads[FileNamePrefix] = Reads.of[String].map(FileNamePrefix(_))
 
       Encoding[LifecycleRule]
         .read(Resource.my.getAsString("lifecycle-rule_0.json"))
@@ -238,7 +238,7 @@ trait VerifyJsonEncodings {
 
 }
 
-object VerifyJsonEncodings {
+object SpecJsonEncodings {
 
   trait Encoding[A] {
     def read: String => A

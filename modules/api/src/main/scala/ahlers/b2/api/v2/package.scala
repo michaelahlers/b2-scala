@@ -82,7 +82,7 @@ package object v2 {
   type DaysFromUploadingToDeletingType = Int Refined DaysFromUploadingToDeletingRules
   @newtype case class DaysFromUploadingToDeleting(toInt: DaysFromUploadingToDeletingType)
 
-  //type FileNamePrefixRules =
+  //type FileNamePrefixRules = ???
   type FileNamePrefixType = String //Refined FileNamePrefixRules
   @newtype case class FileNamePrefix(toText: FileNamePrefixType)
 

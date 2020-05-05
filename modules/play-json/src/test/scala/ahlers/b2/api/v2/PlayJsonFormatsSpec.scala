@@ -6,40 +6,10 @@ import play.api.libs.json._
 /**
  * @author <a href="mailto:michael@ahlers.consulting">Michael Ahlers</a>
  */
-class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings {
+class PlayJsonFormatsSpec extends AnyWordSpec with SpecJsonEncodings {
 
   import PlayJsonFormats._
   import PlayJsonFormatsSpec._
-
-//it must "serialize list buckets" in {
-//  import ScalaCheckPropertyChecks._
-//  import ScalacheckShapeless._
-//
-//  Inspectors.forAll {
-//    Resource.my.getAsStream("list-buckets-request_0.json").autoClosed(Json.parse) ::
-//      Nil
-//  } { verifyFormat[ListBuckets] }
-//
-//  forAll(verifyFormat(_: ListBuckets))
-//}
-//
-//it must "serialize bucket list" in {
-//  import ScalaCheckPropertyChecks._
-//  import ScalacheckShapeless._
-//
-//  Inspectors.forAll {
-//    Resource.my.getAsStream("list-buckets-response_0.json").autoClosed(Json.parse) ::
-//      Nil
-//  } { verifyFormat[BucketList] }
-//
-//  forAll(verifyFormat(_: BucketList))
-//}
-//
-//it must "serialize operation" in {
-//  Inspectors.forAll(Operation.values) {
-//    verifyFormat(_)
-//  }
-//}
 
   implicit override def EncodingAccountAuthorization = FormatEncoding[AccountAuthorization]
   implicit override def EncodingCorsRule = FormatEncoding[CorsRule]
@@ -49,7 +19,7 @@ class PlayJsonFormatsSpec extends AnyWordSpec with VerifyJsonEncodings {
 
 object PlayJsonFormatsSpec {
 
-  import VerifyJsonEncodings._
+  import SpecJsonEncodings._
 
   class FormatEncoding[A: Format] extends Encoding[A] {
     override def read = Json.parse(_).as[A]
